@@ -43,6 +43,8 @@ export interface Question {
   options: string[];
   correct_option: number;
   order: number;
+  question_image_url?: string | null;
+  option_images?: Record<string, string> | null; // {"0": "url", "1": "url", ...}
 }
 
 export interface Result {

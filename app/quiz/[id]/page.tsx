@@ -532,6 +532,14 @@ export default function TakeQuiz({ params }: { params: Promise<{ id: string }> }
             <h2 className="text-2xl font-bold text-gray-800 mt-2">
               {question.question_text}
             </h2>
+            {question.question_image_url && (
+              <img
+                src={question.question_image_url}
+                alt="Question"
+                className="mt-4 max-w-full max-h-64 rounded-lg border shadow-sm"
+                onError={(e) => (e.currentTarget.style.display = 'none')}
+              />
+            )}
           </div>
 
           <div className="space-y-3">
@@ -548,32 +556,47 @@ export default function TakeQuiz({ params }: { params: Promise<{ id: string }> }
                 );
               }
 
-              return displayOptions.map((option, shuffledIndex) => (
-                <button
-                  key={shuffledIndex}
-                  onClick={() => selectAnswer(shuffledIndex)}
-                  className={`w-full text-left p-4 rounded-xl border-2 transition-all ${
-                    selectedShuffledIndex === shuffledIndex
-                      ? 'border-purple-500 bg-purple-50'
-                      : 'border-gray-200 hover:border-purple-300'
-                  }`}
-                >
-                  <div className="flex items-center">
-                    <div
-                      className={`w-6 h-6 rounded-full border-2 mr-3 flex items-center justify-center ${
-                        selectedShuffledIndex === shuffledIndex
-                          ? 'border-purple-500 bg-purple-500'
-                          : 'border-gray-300'
-                      }`}
-                    >
-                      {selectedShuffledIndex === shuffledIndex && (
-                        <span className="text-white text-sm">✓</span>
-                      )}
+              return displayOptions.map((option, shuffledIndex) => {
+                const originalIndex = question.optionMapping ? question.optionMapping[shuffledIndex] : shuffledIndex;
+                const optionImage = question.option_images ? question.option_images[originalIndex?.toString()] : null;
+
+                return (
+                  <button
+                    key={shuffledIndex}
+                    onClick={() => selectAnswer(shuffledIndex)}
+                    className={`w-full text-left p-4 rounded-xl border-2 transition-all ${
+                      selectedShuffledIndex === shuffledIndex
+                        ? 'border-purple-500 bg-purple-50'
+                        : 'border-gray-200 hover:border-purple-300'
+                    }`}
+                  >
+                    <div className="flex items-start gap-3">
+                      <div
+                        className={`w-6 h-6 rounded-full border-2 flex-shrink-0 flex items-center justify-center ${
+                          selectedShuffledIndex === shuffledIndex
+                            ? 'border-purple-500 bg-purple-500'
+                            : 'border-gray-300'
+                        }`}
+                      >
+                        {selectedShuffledIndex === shuffledIndex && (
+                          <span className="text-white text-sm">✓</span>
+                        )}
+                      </div>
+                      <div className="flex-1">
+                        <span className="text-gray-800 block">{option}</span>
+                        {optionImage && (
+                          <img
+                            src={optionImage}
+                            alt={`Option ${shuffledIndex + 1}`}
+                            className="mt-2 max-w-full max-h-32 rounded border"
+                            onError={(e) => (e.currentTarget.style.display = 'none')}
+                          />
+                        )}
+                      </div>
                     </div>
-                    <span className="text-gray-800">{option}</span>
-                  </div>
-                </button>
-              ));
+                  </button>
+                );
+              });
             })()}
           </div>
 

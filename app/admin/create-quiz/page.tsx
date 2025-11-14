@@ -10,6 +10,8 @@ interface QuestionData {
   question_text: string;
   options: string[];
   correct_option: number;
+  question_image_url?: string;
+  option_images?: Record<string, string>; // {"0": "url", "1": "url", ...}
 }
 
 export default function CreateQuiz() {
@@ -24,7 +26,9 @@ export default function CreateQuiz() {
     Array(20).fill(null).map(() => ({
       question_text: '',
       options: ['', '', '', ''],
-      correct_option: 0
+      correct_option: 0,
+      question_image_url: '',
+      option_images: {}
     }))
   );
   const [loading, setLoading] = useState(false);
@@ -62,7 +66,7 @@ export default function CreateQuiz() {
     }
     setQuestions([
       ...questions,
-      { question_text: '', options: ['', '', '', ''], correct_option: 0 },
+      { question_text: '', options: ['', '', '', ''], correct_option: 0, question_image_url: '', option_images: {} },
     ]);
   };
 
@@ -80,6 +84,8 @@ export default function CreateQuiz() {
       newQuestions[index].question_text = value;
     } else if (field === 'correct_option') {
       newQuestions[index].correct_option = value;
+    } else if (field === 'question_image_url') {
+      newQuestions[index].question_image_url = value;
     }
     setQuestions(newQuestions);
   };
@@ -87,6 +93,19 @@ export default function CreateQuiz() {
   const updateOption = (questionIndex: number, optionIndex: number, value: string) => {
     const newQuestions = [...questions];
     newQuestions[questionIndex].options[optionIndex] = value;
+    setQuestions(newQuestions);
+  };
+
+  const updateOptionImage = (questionIndex: number, optionIndex: number, value: string) => {
+    const newQuestions = [...questions];
+    if (!newQuestions[questionIndex].option_images) {
+      newQuestions[questionIndex].option_images = {};
+    }
+    if (value.trim()) {
+      newQuestions[questionIndex].option_images![optionIndex.toString()] = value;
+    } else {
+      delete newQuestions[questionIndex].option_images![optionIndex.toString()];
+    }
     setQuestions(newQuestions);
   };
 
@@ -163,6 +182,8 @@ export default function CreateQuiz() {
         options: q.options,
         correct_option: q.correct_option,
         order: index,
+        question_image_url: q.question_image_url || null,
+        option_images: q.option_images && Object.keys(q.option_images).length > 0 ? q.option_images : null,
       }));
 
       const { error: questionsError } = await supabase
@@ -356,27 +377,67 @@ export default function CreateQuiz() {
                         required
                       />
 
+                      <div>
+                        <label className="block text-xs font-medium text-gray-600 mb-1">
+                          📷 Soraw ushın súwret URL (ixtiyariy)
+                        </label>
+                        <input
+                          type="url"
+                          value={question.question_image_url || ''}
+                          onChange={(e) => updateQuestion(qIndex, 'question_image_url', e.target.value)}
+                          className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent text-gray-800 text-sm"
+                          placeholder="https://example.com/image.jpg"
+                        />
+                        {question.question_image_url && (
+                          <img
+                            src={question.question_image_url}
+                            alt="Preview"
+                            className="mt-2 max-w-xs max-h-40 rounded border"
+                            onError={(e) => (e.currentTarget.style.display = 'none')}
+                          />
+                        )}
+                      </div>
+
                       <div className="space-y-2">
                         <label className="block text-sm font-medium text-gray-700">
                           {translations.createQuiz.correctAnswerLabel}
                         </label>
                         {question.options.map((option, oIndex) => (
-                          <div key={oIndex} className="flex gap-2 items-center">
-                            <input
-                              type="radio"
-                              name={`correct-${qIndex}`}
-                              checked={question.correct_option === oIndex}
-                              onChange={() => updateQuestion(qIndex, 'correct_option', oIndex)}
-                              className="w-4 h-4 text-purple-500"
-                            />
-                            <input
-                              type="text"
-                              value={option}
-                              onChange={(e) => updateOption(qIndex, oIndex, e.target.value)}
-                              className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent text-gray-800"
-                              placeholder={translations.createQuiz.optionPlaceholder}
-                              required
-                            />
+                          <div key={oIndex} className="space-y-1">
+                            <div className="flex gap-2 items-center">
+                              <input
+                                type="radio"
+                                name={`correct-${qIndex}`}
+                                checked={question.correct_option === oIndex}
+                                onChange={() => updateQuestion(qIndex, 'correct_option', oIndex)}
+                                className="w-4 h-4 text-purple-500"
+                              />
+                              <input
+                                type="text"
+                                value={option}
+                                onChange={(e) => updateOption(qIndex, oIndex, e.target.value)}
+                                className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent text-gray-800"
+                                placeholder={translations.createQuiz.optionPlaceholder}
+                                required
+                              />
+                            </div>
+                            <div className="ml-6">
+                              <input
+                                type="url"
+                                value={question.option_images?.[oIndex.toString()] || ''}
+                                onChange={(e) => updateOptionImage(qIndex, oIndex, e.target.value)}
+                                className="w-full px-3 py-1.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent text-gray-800 text-xs"
+                                placeholder="📷 Variant ushın súwret URL (ixtiyariy)"
+                              />
+                              {question.option_images?.[oIndex.toString()] && (
+                                <img
+                                  src={question.option_images[oIndex.toString()]}
+                                  alt={`Option ${oIndex + 1}`}
+                                  className="mt-1 max-w-[100px] max-h-20 rounded border"
+                                  onError={(e) => (e.currentTarget.style.display = 'none')}
+                                />
+                              )}
+                            </div>
                           </div>
                         ))}
                       </div>
