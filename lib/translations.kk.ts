@@ -46,10 +46,10 @@ export const translations = {
     testStartsAt: 'Test búgin saǵat {time} da baslanadı',
     testClosed: 'Test bitedi',
     startedAt: '{time} da baslandı',
-    timeRemaining: '{time} dáqiyqadan keyin',
+    timeRemaining: '{time} minuttan keyin',
     questions: 'Sorawlar sanı',
     timeLimit: 'Waqıt',
-    minutes: 'dáqiyqa',
+    minutes: 'minut',
     author: 'Avtor',
   },
 
@@ -61,7 +61,7 @@ export const translations = {
     testWillAutoStart: 'Test avtomatik baslanadı...',
     testHasStarted: 'Test baslandı! Tez kiriń!',
     testTimeClosed: 'Test waqtı bitedi!',
-    testClosedDescription: 'Test {time} dan {minutes} dáqiyqa dawam ettı hám jabıldı.',
+    testClosedDescription: 'Test {time} dan {minutes} minut dawam ettı hám jabıldı.',
     enterNameLabel: 'Atıńız hám familiyańız *',
     enterNamePlaceholder: 'Mısal: Alisher Navoiy',
     selectClassLabel: 'Klasıńız *',
@@ -99,7 +99,7 @@ export const translations = {
 
   // Waqıt formatlawı
   time: {
-    minutes: 'dáqiyqa',
+    minutes: 'minut',
     seconds: 'sekund',
     hours: 'saǵat',
   },
@@ -157,7 +157,7 @@ export const translations = {
     descriptionPlaceholder: 'Test haqqında qısqasha maǵlıwmat',
     subjectLabel: 'Pán *',
     selectSubject: 'Pándi tańlań',
-    timeLimitLabel: 'Waqıt (dáqiyqa) *',
+    timeLimitLabel: 'Waqıt (minut) *',
     scheduledTimeLabel: 'Baslanıw waqtı *',
     scheduledTimeHelper: 'Test qaysi waqıtta baslanıwın kirgiziń (HH:MM)',
     authorNameLabel: 'Avtor atı *',
@@ -190,7 +190,7 @@ export const translations = {
     averageScore: 'Ortasha ball',
     averageTime: 'Ortasha waqıt',
     scoreDistribution: 'Ball taqsimleniwi',
-    lastTestTimes: 'Sońǵı 10 ta test waqtı (dáqiyqa)',
+    lastTestTimes: 'Sońǵı 10 ta test waqtı (minut)',
     recentResults: 'Sońǵı nátiyeler',
     name: 'Atı',
     class: 'Klas',
