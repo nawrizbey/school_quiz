@@ -1,26 +1,33 @@
 'use client';
 
-import { useState, useRef, DragEvent } from 'react';
+import { useState, useRef, DragEvent, useEffect } from 'react';
 import { supabase } from '@/lib/supabase';
 
 interface ImageUploadProps {
   currentImageUrl?: string;
   onImageUploaded: (url: string) => void;
-  label?: string;
+  placeholder?: string;
   maxSizeMB?: number;
 }
 
 export default function ImageUpload({
   currentImageUrl,
   onImageUploaded,
-  label = '📷 Súwret júklew',
+  placeholder = 'Súwret URL yamasa júklew ushın 📷 basıń',
   maxSizeMB = 5
 }: ImageUploadProps) {
   const [uploading, setUploading] = useState(false);
   const [dragging, setDragging] = useState(false);
-  const [previewUrl, setPreviewUrl] = useState(currentImageUrl || '');
+  const [imageUrl, setImageUrl] = useState(currentImageUrl || '');
+  const [urlInput, setUrlInput] = useState(currentImageUrl || '');
   const [error, setError] = useState('');
+  const [showPreview, setShowPreview] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    setImageUrl(currentImageUrl || '');
+    setUrlInput(currentImageUrl || '');
+  }, [currentImageUrl]);
 
   const uploadImage = async (file: File) => {
     try {
@@ -34,7 +41,7 @@ export default function ImageUpload({
       }
 
       // Validate file size
-      const maxSize = maxSizeMB * 1024 * 1024; // Convert MB to bytes
+      const maxSize = maxSizeMB * 1024 * 1024;
       if (file.size > maxSize) {
         setError(`Súwret ólshemi ${maxSizeMB}MB dan asırmaslıǵı kerek`);
         return;
@@ -64,7 +71,8 @@ export default function ImageUpload({
         .from('quiz-images')
         .getPublicUrl(filePath);
 
-      setPreviewUrl(publicUrl);
+      setImageUrl(publicUrl);
+      setUrlInput(publicUrl);
       onImageUploaded(publicUrl);
     } catch (err) {
       console.error('Error:', err);
@@ -101,8 +109,16 @@ export default function ImageUpload({
     }
   };
 
+  const handleUrlChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    setUrlInput(value);
+    setImageUrl(value);
+    onImageUploaded(value);
+  };
+
   const handleRemove = () => {
-    setPreviewUrl('');
+    setImageUrl('');
+    setUrlInput('');
     onImageUploaded('');
     if (fileInputRef.current) {
       fileInputRef.current.value = '';
@@ -110,95 +126,101 @@ export default function ImageUpload({
   };
 
   return (
-    <div className="space-y-2">
-      <label className="block text-xs font-medium text-gray-600">
-        {label}
-      </label>
+    <div className="space-y-1">
+      {/* Compact Input Field */}
+      <div
+        onDragOver={handleDragOver}
+        onDragLeave={handleDragLeave}
+        onDrop={handleDrop}
+        className={`relative flex items-center border rounded-lg transition-all ${
+          dragging
+            ? 'border-purple-500 bg-purple-50'
+            : error
+            ? 'border-red-300'
+            : 'border-gray-300 hover:border-purple-400'
+        } ${uploading ? 'opacity-50' : ''}`}
+      >
+        {/* Hidden File Input */}
+        <input
+          ref={fileInputRef}
+          type="file"
+          accept="image/*"
+          onChange={handleFileSelect}
+          className="hidden"
+        />
 
-      {/* Preview */}
-      {previewUrl && (
-        <div className="relative inline-block">
-          <img
-            src={previewUrl}
-            alt="Preview"
-            className="max-w-xs max-h-40 rounded-lg border shadow-sm"
-            onError={(e) => {
-              e.currentTarget.style.display = 'none';
-              setError('Súwretti júklewde qátelik');
-            }}
-          />
-          <button
-            type="button"
-            onClick={handleRemove}
-            className="absolute top-2 right-2 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center hover:bg-red-600 transition-all"
-            title="Óshiriw"
-          >
-            ×
-          </button>
-        </div>
-      )}
-
-      {/* Upload Area */}
-      {!previewUrl && (
-        <div
-          onDragOver={handleDragOver}
-          onDragLeave={handleDragLeave}
-          onDrop={handleDrop}
-          className={`border-2 border-dashed rounded-lg p-6 text-center transition-all cursor-pointer ${
-            dragging
-              ? 'border-purple-500 bg-purple-50'
-              : 'border-gray-300 hover:border-purple-400'
-          } ${uploading ? 'opacity-50 pointer-events-none' : ''}`}
+        {/* Icon Button */}
+        <button
+          type="button"
           onClick={() => fileInputRef.current?.click()}
+          className="px-3 py-2 text-gray-500 hover:text-purple-600 transition-colors flex-shrink-0"
+          disabled={uploading}
+          title="Súwret júklew"
         >
-          <input
-            ref={fileInputRef}
-            type="file"
-            accept="image/*"
-            onChange={handleFileSelect}
-            className="hidden"
-          />
-
           {uploading ? (
-            <div className="text-gray-600">
-              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-purple-500 mx-auto mb-2"></div>
-              <p className="text-sm">Júklenbekte...</p>
-            </div>
+            <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-purple-500"></div>
           ) : (
-            <>
-              <div className="text-4xl mb-2">📸</div>
-              <p className="text-sm text-gray-600 mb-1">
-                Súwretti sudırap keltiriń yamasa basıń
-              </p>
-              <p className="text-xs text-gray-500">
-                PNG, JPG, WEBP (maks {maxSizeMB}MB)
-              </p>
-            </>
+            <span className="text-xl">📷</span>
           )}
-        </div>
-      )}
+        </button>
+
+        {/* URL Input */}
+        <input
+          type="text"
+          value={urlInput}
+          onChange={handleUrlChange}
+          placeholder={placeholder}
+          className="flex-1 px-2 py-2 bg-transparent focus:outline-none text-gray-800 text-sm"
+          disabled={uploading}
+        />
+
+        {/* Thumbnail Preview */}
+        {imageUrl && (
+          <div className="flex items-center gap-2 pr-2">
+            <div
+              className="relative group cursor-pointer"
+              onMouseEnter={() => setShowPreview(true)}
+              onMouseLeave={() => setShowPreview(false)}
+            >
+              <img
+                src={imageUrl}
+                alt="Preview"
+                className="w-8 h-8 rounded object-cover border border-gray-200"
+                onError={() => setError('Súwretti júklewde qátelik')}
+              />
+              {showPreview && (
+                <div className="absolute right-0 top-10 z-10 p-2 bg-white rounded-lg shadow-xl border">
+                  <img
+                    src={imageUrl}
+                    alt="Full Preview"
+                    className="max-w-xs max-h-64 rounded"
+                  />
+                </div>
+              )}
+            </div>
+            <button
+              type="button"
+              onClick={handleRemove}
+              className="text-red-500 hover:text-red-700 font-bold text-lg leading-none"
+              title="Óshiriw"
+            >
+              ×
+            </button>
+          </div>
+        )}
+      </div>
 
       {/* Error Message */}
       {error && (
         <p className="text-xs text-red-600">{error}</p>
       )}
 
-      {/* URL Input (optional) */}
-      <details className="text-xs text-gray-500">
-        <summary className="cursor-pointer hover:text-gray-700">
-          Yamasa URL júkleń
-        </summary>
-        <input
-          type="url"
-          value={previewUrl}
-          onChange={(e) => {
-            setPreviewUrl(e.target.value);
-            onImageUploaded(e.target.value);
-          }}
-          className="w-full mt-2 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent text-gray-800 text-sm"
-          placeholder="https://example.com/image.jpg"
-        />
-      </details>
+      {/* Help Text */}
+      {!error && !imageUrl && (
+        <p className="text-xs text-gray-500">
+          Súwretti sudırap keltiriń, 📷 basıń yamasa URL kirgiziń (maks {maxSizeMB}MB)
+        </p>
+      )}
     </div>
   );
 }

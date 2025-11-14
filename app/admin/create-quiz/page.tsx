@@ -378,12 +378,17 @@ export default function CreateQuiz() {
                         required
                       />
 
-                      <ImageUpload
-                        currentImageUrl={question.question_image_url}
-                        onImageUploaded={(url) => updateQuestion(qIndex, 'question_image_url', url)}
-                        label="📷 Soraw ushın súwret (ixtiyariy)"
-                        maxSizeMB={5}
-                      />
+                      <div>
+                        <label className="block text-xs font-medium text-gray-600 mb-1">
+                          Soraw súwreti (ixtiyariy)
+                        </label>
+                        <ImageUpload
+                          currentImageUrl={question.question_image_url}
+                          onImageUploaded={(url) => updateQuestion(qIndex, 'question_image_url', url)}
+                          placeholder="Súwret URL yamasa júklew ushın 📷 basıń"
+                          maxSizeMB={5}
+                        />
+                      </div>
 
                       <div className="space-y-2">
                         <label className="block text-sm font-medium text-gray-700">
@@ -408,11 +413,11 @@ export default function CreateQuiz() {
                                 required
                               />
                             </div>
-                            <div className="ml-6">
+                            <div className="ml-6 mt-1">
                               <ImageUpload
                                 currentImageUrl={question.option_images?.[oIndex.toString()]}
                                 onImageUploaded={(url) => updateOptionImage(qIndex, oIndex, url)}
-                                label={`📷 ${String.fromCharCode(65 + oIndex)}-variant súwreti (ixtiyariy)`}
+                                placeholder={`${String.fromCharCode(65 + oIndex)}-variant súwreti (ixtiyariy)`}
                                 maxSizeMB={3}
                               />
                             </div>
