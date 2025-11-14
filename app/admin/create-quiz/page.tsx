@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import { supabase, SUBJECTS, DAYS } from '@/lib/supabase';
 import type { Subject } from '@/lib/supabase';
 import translations from '@/lib/translations.kk';
+import ImageUpload from '@/components/ImageUpload';
 
 interface QuestionData {
   question_text: string;
@@ -377,26 +378,12 @@ export default function CreateQuiz() {
                         required
                       />
 
-                      <div>
-                        <label className="block text-xs font-medium text-gray-600 mb-1">
-                          📷 Soraw ushın súwret URL (ixtiyariy)
-                        </label>
-                        <input
-                          type="url"
-                          value={question.question_image_url || ''}
-                          onChange={(e) => updateQuestion(qIndex, 'question_image_url', e.target.value)}
-                          className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent text-gray-800 text-sm"
-                          placeholder="https://example.com/image.jpg"
-                        />
-                        {question.question_image_url && (
-                          <img
-                            src={question.question_image_url}
-                            alt="Preview"
-                            className="mt-2 max-w-xs max-h-40 rounded border"
-                            onError={(e) => (e.currentTarget.style.display = 'none')}
-                          />
-                        )}
-                      </div>
+                      <ImageUpload
+                        currentImageUrl={question.question_image_url}
+                        onImageUploaded={(url) => updateQuestion(qIndex, 'question_image_url', url)}
+                        label="📷 Soraw ushın súwret (ixtiyariy)"
+                        maxSizeMB={5}
+                      />
 
                       <div className="space-y-2">
                         <label className="block text-sm font-medium text-gray-700">
@@ -422,21 +409,12 @@ export default function CreateQuiz() {
                               />
                             </div>
                             <div className="ml-6">
-                              <input
-                                type="url"
-                                value={question.option_images?.[oIndex.toString()] || ''}
-                                onChange={(e) => updateOptionImage(qIndex, oIndex, e.target.value)}
-                                className="w-full px-3 py-1.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent text-gray-800 text-xs"
-                                placeholder="📷 Variant ushın súwret URL (ixtiyariy)"
+                              <ImageUpload
+                                currentImageUrl={question.option_images?.[oIndex.toString()]}
+                                onImageUploaded={(url) => updateOptionImage(qIndex, oIndex, url)}
+                                label={`📷 ${String.fromCharCode(65 + oIndex)}-variant súwreti (ixtiyariy)`}
+                                maxSizeMB={3}
                               />
-                              {question.option_images?.[oIndex.toString()] && (
-                                <img
-                                  src={question.option_images[oIndex.toString()]}
-                                  alt={`Option ${oIndex + 1}`}
-                                  className="mt-1 max-w-[100px] max-h-20 rounded border"
-                                  onError={(e) => (e.currentTarget.style.display = 'none')}
-                                />
-                              )}
                             </div>
                           </div>
                         ))}
