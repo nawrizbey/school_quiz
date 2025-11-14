@@ -209,6 +209,12 @@ export default function SuperAdminDashboard() {
                       </div>
                       <div className="flex gap-2 flex-col">
                         <button
+                          onClick={() => router.push(`/admin/edit-quiz/${quiz.id}`)}
+                          className="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-lg transition-all whitespace-nowrap"
+                        >
+                          {translations.teacherDashboard.edit}
+                        </button>
+                        <button
                           onClick={() => copyQuizLink(quiz.id)}
                           className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg transition-all whitespace-nowrap"
                         >
