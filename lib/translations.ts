@@ -174,6 +174,7 @@ export const translations = {
     fillAllFields: 'Barcha maydonlarni to\'ldiring',
     addAtLeastOneQuestion: 'Kamida bitta savol qo\'shing',
     questionMustHave4Options: 'Har bir savolda 4 ta variant bo\'lishi kerak',
+    maxQuestionsReached: 'Maksimal 20 ta savol qo\'shish mumkin',
     testCreated: 'Test muvaffaqiyatli yaratildi!',
     errorCreating: 'Test yaratishda xatolik yuz berdi',
   },

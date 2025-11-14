@@ -20,9 +20,13 @@ export default function CreateQuiz() {
   const [scheduledDay, setScheduledDay] = useState(1);
   const [scheduledTime, setScheduledTime] = useState('21:00');
   const [authorName, setAuthorName] = useState('');
-  const [questions, setQuestions] = useState<QuestionData[]>([
-    { question_text: '', options: ['', '', '', ''], correct_option: 0 },
-  ]);
+  const [questions, setQuestions] = useState<QuestionData[]>(
+    Array(20).fill(null).map(() => ({
+      question_text: '',
+      options: ['', '', '', ''],
+      correct_option: 0
+    }))
+  );
   const [loading, setLoading] = useState(false);
   const router = useRouter();
 
@@ -52,6 +56,10 @@ export default function CreateQuiz() {
   }, [router]);
 
   const addQuestion = () => {
+    if (questions.length >= 20) {
+      alert(translations.createQuiz.maxQuestionsReached || 'Maksimal 20 ta savol qo\'shish mumkin');
+      return;
+    }
     setQuestions([
       ...questions,
       { question_text: '', options: ['', '', '', ''], correct_option: 0 },

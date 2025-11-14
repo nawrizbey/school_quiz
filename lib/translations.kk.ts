@@ -174,6 +174,7 @@ export const translations = {
     fillAllFields: 'Barlıq maydonlardı toltırıń',
     addAtLeastOneQuestion: 'Keminde bitta soraw qosıń',
     questionMustHave4Options: 'Ár bir sorawda 4 ta variant bolıwı kerek',
+    maxQuestionsReached: 'Maksimal 20 ta soraw qosıw múmkin',
     testCreated: 'Test sátti jaratıldı!',
     errorCreating: 'Test jaratıwda qátelik júz berdi',
   },
