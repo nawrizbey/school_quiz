@@ -132,7 +132,7 @@ export default function TakeQuiz({ params }: { params: Promise<{ id: string }> }
         return {
           ...q,
           shuffledOptions: q.options || [],
-          optionMapping: (q.options || []).map((_, i) => i)
+          optionMapping: (q.options || []).map((_option: string, i: number) => i)
         };
       }) || [];
 
@@ -233,7 +233,7 @@ export default function TakeQuiz({ params }: { params: Promise<{ id: string }> }
     // Shuffle options for this student
     const seed = `${studentName}-${resolvedParams.id}`;
     const shuffledQuestions = questions.map(q => {
-      const indices = q.options.map((_, i) => i);
+      const indices = q.options.map((_option: string, i: number) => i);
       const shuffledIndices = seededShuffle(indices, seed + q.id);
 
       const shuffled = {
