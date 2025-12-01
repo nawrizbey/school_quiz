@@ -122,9 +122,20 @@ Brauzerda ochiladi: [http://localhost:3000](http://localhost:3000)
 
 ⚠️ **MUHIM**: Production'da parollarni o'zgartiring!
 
+### Parollarni o'zgartirish:
+**Super Admin orqali:**
+1. Super Admin sifatida login qiling
+2. Super Dashboard → **"Mugalimler"** (yashil karta) → bosing
+3. **"Mugalimlerdi basqarıw"** sahifasi ochiladi
+4. Har bir o'qituvchini **"Ózgertiw"** tugmasi bilan tahrirlang
+5. **Login** va **Parol**ni o'zgartiring
+6. **"Saqlaw"** tugmasini bosing
+
+⚠️ Parol o'zgartirgandan keyin o'qituvchilar yangi parol bilan kirishlari kerak!
+
 ### Kirish tartibi:
 1. Bosh sahifadan "Mugalimler ushın" tugmasini bosing
-2. Username va parolni kiriting
+2. Username va parolni kiriting (login sahifasida parollar ko'rinmaydi)
 3. Super Admin bo'lsa - barcha testlarni ko'radi
 4. O'qituvchi bo'lsa - faqat o'z fanidagi testlarni ko'radi
 
@@ -167,7 +178,12 @@ Brauzerda ochiladi: [http://localhost:3000](http://localhost:3000)
    - Barcha testlarni ko'ring
    - Fan bo'yicha filter qiling
    - Test linkini nusxalang (gruhga jo'natish uchun)
-3. **Statistika** (`/stats`) - **Faqat super admin kiradi!**
+   - **Mugalimler** kartasini bosing → Login va parollarni o'zgartiring
+3. **Mugalimlerdi basqarıw** (`/admin/manage-teachers`):
+   - Barcha o'qituvchilar ro'yxati
+   - Login (username) o'zgartirish
+   - Parol o'zgartirish
+4. **Statistika** (`/stats`) - **Faqat super admin kiradi!**
    - O'rtacha ball va vaqt
    - Ball taqsimoti (grafik)
    - So'nggi testlar vaqti (grafik)

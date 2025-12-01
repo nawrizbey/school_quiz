@@ -115,21 +115,24 @@ export default function SuperAdminDashboard() {
         </div>
 
         {/* Stats Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
+        <div className="grid grid-cols-1 md:grid-cols-5 gap-4 mb-6">
           <div className="bg-blue-500 text-white rounded-xl p-6">
             <div className="text-4xl mb-2">📚</div>
             <div className="text-3xl font-bold">{quizzes.length}</div>
-            <div>{translations.superAdminDashboard.totalTests}</div>
+            <div className="text-sm">{translations.superAdminDashboard.totalTests}</div>
           </div>
-          <div className="bg-green-500 text-white rounded-xl p-6">
+          <Link
+            href="/admin/manage-teachers"
+            className="bg-green-500 hover:bg-green-600 text-white rounded-xl p-6 transition-all"
+          >
             <div className="text-4xl mb-2">👨‍🏫</div>
             <div className="text-3xl font-bold">{teachers.filter(t => t.role === 'teacher').length}</div>
-            <div>{translations.superAdminDashboard.teachers}</div>
-          </div>
+            <div className="text-sm">{translations.superAdminDashboard.teachers} →</div>
+          </Link>
           <div className="bg-purple-500 text-white rounded-xl p-6">
             <div className="text-4xl mb-2">📖</div>
             <div className="text-3xl font-bold">{SUBJECTS.length}</div>
-            <div>{translations.superAdminDashboard.subjects}</div>
+            <div className="text-sm">{translations.superAdminDashboard.subjects}</div>
           </div>
           <Link
             href="/stats"
@@ -137,7 +140,15 @@ export default function SuperAdminDashboard() {
           >
             <div className="text-4xl mb-2">📊</div>
             <div className="text-xl font-bold">{translations.statistics.title}</div>
-            <div>{translations.superAdminDashboard.viewStats} →</div>
+            <div className="text-sm">{translations.superAdminDashboard.viewStats} →</div>
+          </Link>
+          <Link
+            href="/admin/create-quiz"
+            className="bg-indigo-500 hover:bg-indigo-600 text-white rounded-xl p-6 transition-all"
+          >
+            <div className="text-4xl mb-2">➕</div>
+            <div className="text-xl font-bold">Jańa test</div>
+            <div className="text-sm">jaratıw →</div>
           </Link>
         </div>
 

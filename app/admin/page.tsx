@@ -113,17 +113,7 @@ export default function AdminLogin() {
           </button>
         </form>
 
-        <div className="mt-6 text-center text-xs text-gray-600 space-y-2">
-          <p className="font-semibold">{translations.adminLogin.accounts}</p>
-          <div className="grid grid-cols-2 gap-2 text-left bg-gray-50 p-3 rounded">
-            <div><strong>{translations.adminLogin.superAdmin}:</strong><br/>superadmin / admin123</div>
-            <div><strong>{translations.subjects.matematika}:</strong><br/>matematika / math123</div>
-            <div><strong>{translations.subjects.biologiya}:</strong><br/>biologiya / bio123</div>
-            <div><strong>{translations.subjects.ingliz_tili}:</strong><br/>ingliz / eng123</div>
-            <div><strong>{translations.subjects.umumiy_fanlar}:</strong><br/>umumiy / general123</div>
-            <div><strong>{translations.subjects.zakovat}:</strong><br/>zakovat / logic123</div>
-          </div>
-        </div>
+        {/* Parol ko'rsatish bo'limi olib tashlandi - xavfsizlik uchun */}
       </div>
     </div>
   );
