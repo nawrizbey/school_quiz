@@ -402,13 +402,51 @@ export default function TakeQuiz({ params }: { params: Promise<{ id: string }> }
   if (showNameInput) {
     const isWindowClosed = quiz && isTestWindowClosed(quiz);
 
+    // Get subject label
+    const getSubjectLabel = (subject: string) => {
+      const subjects: { [key: string]: string } = {
+        'matematika': 'Matematika',
+        'biologiya': 'Biologiya',
+        'ingliz_tili': 'Ingliz tili',
+        'umumiy_fanlar': 'Umumiy fanlar',
+        'zakovat': 'Zakovat hám logika'
+      };
+      return subjects[subject] || subject;
+    };
+
     return (
       <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-500 to-purple-600 p-4">
         <div className="max-w-md w-full bg-white rounded-2xl shadow-2xl p-8">
           <h1 className="text-3xl font-bold text-gray-800 mb-2">{quiz.title}</h1>
           {quiz.description && (
-            <p className="text-gray-600 mb-6">{quiz.description}</p>
+            <p className="text-gray-600 mb-4">{quiz.description}</p>
           )}
+
+          {/* Test ma'lumotlari */}
+          <div className="bg-gradient-to-r from-purple-50 to-blue-50 border border-purple-200 rounded-xl p-4 mb-6">
+            <div className="space-y-2 text-sm">
+              <div className="flex items-center text-gray-700">
+                <span className="font-semibold min-w-[80px]">📚 Fan:</span>
+                <span className="text-purple-700 font-medium">{getSubjectLabel(quiz.subject)}</span>
+              </div>
+              <div className="flex items-center text-gray-700">
+                <span className="font-semibold min-w-[80px]">✍️ Muallif:</span>
+                <span>{quiz.author_name}</span>
+              </div>
+              <div className="flex items-center text-gray-700">
+                <span className="font-semibold min-w-[80px]">📝 Savollar:</span>
+                <span>{questions.length} ta</span>
+              </div>
+              <div className="flex items-center text-gray-700">
+                <span className="font-semibold min-w-[80px]">⏱ Waqıt:</span>
+                <span>{Math.floor(quiz.time_limit / 60)} minut</span>
+              </div>
+              <div className="flex items-center text-gray-700">
+                <span className="font-semibold min-w-[80px]">🕐 Baslanıw:</span>
+                <span>{quiz.scheduled_time.slice(0, 5)}</span>
+              </div>
+            </div>
+          </div>
 
           {isWindowClosed && (
             <div className="bg-red-50 border-2 border-red-400 rounded-xl p-4 mb-6">
@@ -428,15 +466,11 @@ export default function TakeQuiz({ params }: { params: Promise<{ id: string }> }
             </div>
           )}
 
-          <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6">
-            <div className="space-y-2 text-gray-700">
-              <p>📝 {translations.quizList.questions}: {questions.length}</p>
-              <p>⏱ {translations.quizList.timeLimit}: {Math.floor(quiz.time_limit / 60)} {translations.quizList.minutes}</p>
-              {testHasStarted && !isWindowClosed && scheduledStartTime && (
-                <p className="text-yellow-600 font-semibold">⚠️ {translations.quizTaking.testHasStarted}</p>
-              )}
+          {testHasStarted && !isWindowClosed && (
+            <div className="bg-green-50 border-2 border-green-400 rounded-xl p-4 mb-6">
+              <p className="text-green-700 font-semibold text-center">✅ Test házir bar! Atın jazıń hám kiriń</p>
             </div>
-          </div>
+          )}
 
           <div className="space-y-4 mb-6">
             <div>

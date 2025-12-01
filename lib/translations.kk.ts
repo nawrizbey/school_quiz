@@ -23,8 +23,8 @@ export const translations = {
 
   // Bas bet
   home: {
-    title: 'Test Ilovası',
-    subtitle: 'Test tapsırıń hám nátiyjelerdı kóriń',
+    title: 'Mektep Test Tizimi',
+    subtitle: 'Onlayn test tapsırıw platforması',
     takeQuiz: 'Test tapsırıw',
     forTeachers: 'Mugalimler ushın',
     footer: 'Mobil-ústinde | Tez hám jeńil',
