@@ -54,6 +54,22 @@ export default function TakeQuiz({ params }: { params: Promise<{ id: string }> }
   const [waitingForStart, setWaitingForStart] = useState(false);
   const router = useRouter();
 
+  // Helper function - test oynasi yopilganligini tekshirish
+  const isTestWindowClosed = (quiz: Quiz | null) => {
+    if (!quiz) return false;
+
+    const now = new Date();
+    const [hours, minutes] = quiz.scheduled_time.split(':').map(Number);
+
+    const startTime = new Date(now);
+    startTime.setHours(hours, minutes, 0, 0);
+
+    const endTime = new Date(startTime);
+    endTime.setSeconds(endTime.getSeconds() + quiz.time_limit);
+
+    return now > endTime;
+  };
+
   useEffect(() => {
     loadQuiz();
   }, [resolvedParams.id]);
@@ -89,8 +105,9 @@ export default function TakeQuiz({ params }: { params: Promise<{ id: string }> }
     const timer = setInterval(() => {
       setTimeLeft((prev) => {
         if (prev <= 1) {
+          // Vaqt tugadi - testni avtomatik yuborish
           handleSubmit();
-          return 0;
+          return 0; // Timer 00:00 da to'xtaydi
         }
         return prev - 1;
       });
@@ -108,6 +125,13 @@ export default function TakeQuiz({ params }: { params: Promise<{ id: string }> }
         .single();
 
       if (quizError) throw quizError;
+
+      // Test oynasi yopilganligini darhol tekshirish
+      if (isTestWindowClosed(quizData)) {
+        alert(translations.quizTaking.testWindowClosed);
+        router.push('/quiz');
+        return;
+      }
 
       const { data: questionsData, error: questionsError } = await supabase
         .from('questions')
@@ -158,21 +182,6 @@ export default function TakeQuiz({ params }: { params: Promise<{ id: string }> }
     result.setHours(hours, minutes, 0, 0);
 
     return result;
-  };
-
-  const isTestWindowClosed = (quiz: Quiz) => {
-    if (!quiz) return false;
-
-    const now = new Date();
-    const [hours, minutes] = quiz.scheduled_time.split(':').map(Number);
-
-    const startTime = new Date(now);
-    startTime.setHours(hours, minutes, 0, 0);
-
-    const endTime = new Date(startTime);
-    endTime.setSeconds(endTime.getSeconds() + quiz.time_limit);
-
-    return now > endTime;
   };
 
   const handleStart = async () => {
