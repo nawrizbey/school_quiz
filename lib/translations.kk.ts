@@ -95,6 +95,9 @@ export const translations = {
     yourAnswers: 'Siziń juwaplarıńız',
     correctAnswer: 'Durıs juwap',
     yourAnswer: 'Siziń juwabıńız',
+    testFinished: 'Test tamamlandı. Nátiyje kórildi.',
+    closeTab: 'Endi sayt betın jabıwıńız múmkin.',
+    cannotGoBack: 'Siz artqa qaytıp bılmaysız. Nátiyje kórildi.',
   },
 
   // Waqıt formatlawı

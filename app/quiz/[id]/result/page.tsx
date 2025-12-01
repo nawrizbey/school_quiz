@@ -1,8 +1,7 @@
 'use client';
 
 import { use, useState, useEffect } from 'react';
-import { useSearchParams } from 'next/navigation';
-import Link from 'next/link';
+import { useSearchParams, useRouter } from 'next/navigation';
 import { supabase } from '@/lib/supabase';
 import type { Result, Quiz, Question } from '@/lib/supabase';
 import translations from '@/lib/translations.kk';
@@ -10,6 +9,7 @@ import translations from '@/lib/translations.kk';
 export default function QuizResult({ params }: { params: Promise<{ id: string }> }) {
   const resolvedParams = use(params);
   const searchParams = useSearchParams();
+  const router = useRouter();
   const resultId = searchParams.get('resultId');
 
   const [result, setResult] = useState<Result | null>(null);
@@ -22,6 +22,38 @@ export default function QuizResult({ params }: { params: Promise<{ id: string }>
       loadResultData();
     }
   }, [resultId]);
+
+  // Prevent back button navigation
+  useEffect(() => {
+    // Push a new state to prevent going back
+    window.history.pushState(null, '', window.location.href);
+
+    const handlePopState = () => {
+      // Push state again to block back navigation
+      window.history.pushState(null, '', window.location.href);
+      alert(translations.quizResult.cannotGoBack || "Siz artqa qaytıp bılmaysız. Nátiyje kórildı.");
+    };
+
+    window.addEventListener('popstate', handlePopState);
+
+    return () => {
+      window.removeEventListener('popstate', handlePopState);
+    };
+  }, []);
+
+  // Prevent page reload
+  useEffect(() => {
+    const handleBeforeUnload = (e: BeforeUnloadEvent) => {
+      e.preventDefault();
+      e.returnValue = '';
+    };
+
+    window.addEventListener('beforeunload', handleBeforeUnload);
+
+    return () => {
+      window.removeEventListener('beforeunload', handleBeforeUnload);
+    };
+  }, []);
 
   const loadResultData = async () => {
     try {
@@ -166,21 +198,14 @@ export default function QuizResult({ params }: { params: Promise<{ id: string }>
               </div>
             </div>
 
-            {/* Actions */}
-            <div className="space-y-3">
-              <Link
-                href="/quiz"
-                className="block w-full bg-blue-500 hover:bg-blue-600 text-white font-semibold py-3 px-6 rounded-lg transition-all text-center"
-              >
-                {translations.quizResult.otherTests}
-              </Link>
-
-              <Link
-                href="/"
-                className="block w-full border-2 border-gray-300 hover:bg-gray-50 text-gray-700 font-semibold py-3 px-6 rounded-lg transition-all text-center"
-              >
-                {translations.common.home}
-              </Link>
+            {/* Info Message - No Navigation Allowed */}
+            <div className="bg-yellow-50 border-2 border-yellow-400 rounded-xl p-4">
+              <p className="text-yellow-800 font-semibold text-center">
+                ℹ️ {translations.quizResult.testFinished || "Test tamamlandı. Nátiyje kórildi."}
+              </p>
+              <p className="text-yellow-700 text-sm text-center mt-2">
+                {translations.quizResult.closeTab || "Endi sayt betın jabıwıńız múmkin."}
+              </p>
             </div>
           </div>
         </div>
