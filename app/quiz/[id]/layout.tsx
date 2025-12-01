@@ -40,18 +40,15 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     const subjectLabel = subjects[quiz.subject] || quiz.subject;
     const timeInMinutes = Math.floor(quiz.time_limit / 60);
     const startTime = quiz.scheduled_time.slice(0, 5); // HH:MM
-    const questionsText = questionCount ? `${questionCount} soraw` : '';
+    const questionsCount = questionCount || 0;
 
     const title = `${quiz.title} - ${subjectLabel}`;
 
-    // Rich description with all details
+    // Compact description - most important info first
     const descriptionParts = [
-      `📚 Pán: ${subjectLabel}`,
-      `✍️ Avtor: ${quiz.author_name}`,
-      questionsText ? `📝 ${questionsText}` : '',
-      `⏱ Waqıt: ${timeInMinutes} minut`,
-      `🕐 Baslanıw: ${startTime}`,
-    ].filter(Boolean);
+      `📝 ${questionsCount} soraw · ⏱ ${timeInMinutes} min · 🕐 ${startTime}`,
+      `✍️ ${quiz.author_name}`,
+    ];
 
     const description = descriptionParts.join('\n');
 
