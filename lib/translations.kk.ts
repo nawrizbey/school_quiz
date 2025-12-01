@@ -63,7 +63,7 @@ export const translations = {
     testTimeClosed: 'Test waqtı bitedi!',
     testClosedDescription: 'Test {time} dan {minutes} minut dawam ettı hám jabıldı.',
     enterNameLabel: 'Atıńız hám familiyańız *',
-    enterNamePlaceholder: 'Mısal: Alisher Navoiy',
+    enterNamePlaceholder: 'Mısal: Allanov Allan',
     selectClassLabel: 'Klasıńız *',
     classNumber: '{number}-klas',
     startTest: 'Testı baslaw',
