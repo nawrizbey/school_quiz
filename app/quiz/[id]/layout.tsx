@@ -53,7 +53,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       `🕐 Baslanıw: ${startTime}`,
     ].filter(Boolean);
 
-    const description = descriptionParts.join(' | ');
+    const description = descriptionParts.join('\n');
 
     return {
       title: title,
