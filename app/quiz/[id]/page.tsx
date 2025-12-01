@@ -293,12 +293,6 @@ export default function TakeQuiz({ params }: { params: Promise<{ id: string }> }
     }
   };
 
-  const prevQuestion = () => {
-    if (currentQuestion > 0) {
-      setCurrentQuestion(currentQuestion - 1);
-    }
-  };
-
   const handleSubmit = async () => {
     if (submitting) return;
     setSubmitting(true);
@@ -516,13 +510,6 @@ export default function TakeQuiz({ params }: { params: Promise<{ id: string }> }
           >
             {isWindowClosed ? translations.quizTaking.testClosedButton : testHasStarted ? translations.quizTaking.startTest : translations.quizTaking.readyToWait}
           </button>
-
-          <button
-            onClick={() => router.push('/quiz')}
-            className="w-full mt-3 text-gray-600 hover:text-gray-800 underline"
-          >
-            {translations.common.back}
-          </button>
         </div>
       </div>
     );
@@ -644,27 +631,19 @@ export default function TakeQuiz({ params }: { params: Promise<{ id: string }> }
           </div>
 
           {/* Navigation */}
-          <div className="flex gap-3 mt-8">
-            <button
-              onClick={prevQuestion}
-              disabled={currentQuestion === 0}
-              className="px-6 py-3 border border-gray-300 rounded-lg hover:bg-gray-50 text-gray-700 font-semibold transition-all disabled:opacity-50 disabled:cursor-not-allowed"
-            >
-              ← {translations.common.back}
-            </button>
-
+          <div className="mt-8">
             {currentQuestion === questions.length - 1 ? (
               <button
                 onClick={handleSubmit}
                 disabled={submitting || answers.includes(-1)}
-                className="flex-1 bg-green-500 hover:bg-green-600 text-white font-semibold py-3 px-6 rounded-lg transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                className="w-full bg-green-500 hover:bg-green-600 text-white font-semibold py-3 px-6 rounded-lg transition-all disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 {submitting ? translations.quizTaking.saving : translations.quizTaking.finishTest}
               </button>
             ) : (
               <button
                 onClick={nextQuestion}
-                className="flex-1 bg-purple-500 hover:bg-purple-600 text-white font-semibold py-3 px-6 rounded-lg transition-all"
+                className="w-full bg-purple-500 hover:bg-purple-600 text-white font-semibold py-3 px-6 rounded-lg transition-all"
               >
                 {translations.common.next} →
               </button>
