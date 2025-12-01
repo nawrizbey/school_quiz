@@ -426,16 +426,16 @@ export default function TakeQuiz({ params }: { params: Promise<{ id: string }> }
           <div className="bg-gradient-to-r from-purple-50 to-blue-50 border border-purple-200 rounded-xl p-4 mb-6">
             <div className="space-y-2 text-sm">
               <div className="flex items-center text-gray-700">
-                <span className="font-semibold min-w-[80px]">📚 Fan:</span>
+                <span className="font-semibold min-w-[80px]">📚 Pán:</span>
                 <span className="text-purple-700 font-medium">{getSubjectLabel(quiz.subject)}</span>
               </div>
               <div className="flex items-center text-gray-700">
-                <span className="font-semibold min-w-[80px]">✍️ Muallif:</span>
+                <span className="font-semibold min-w-[80px]">✍️ Avtor:</span>
                 <span>{quiz.author_name}</span>
               </div>
               <div className="flex items-center text-gray-700">
-                <span className="font-semibold min-w-[80px]">📝 Savollar:</span>
-                <span>{questions.length} ta</span>
+                <span className="font-semibold min-w-[80px]">📝 Sorawlar:</span>
+                <span>{questions.length} dana</span>
               </div>
               <div className="flex items-center text-gray-700">
                 <span className="font-semibold min-w-[80px]">⏱ Waqıt:</span>
