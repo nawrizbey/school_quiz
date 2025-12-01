@@ -2,8 +2,18 @@ import type { Metadata, Viewport } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "Quiz App - Test topshirish va natijalarni ko'rish",
-  description: "Tez va oson quiz/test yarating, topshiring va statistikani kuzating",
+  title: "Mektep Test Tizimi - Onlayn test tapsırıw platforması",
+  description: "Mektep o'qıwshıları ushın onlayn test tapsırıw hám nátiyjelerin kóriw platforması",
+  openGraph: {
+    title: "Mektep Test Tizimi",
+    description: "Onlayn test tapsırıw platforması",
+    type: "website",
+  },
+  twitter: {
+    card: "summary",
+    title: "Mektep Test Tizimi",
+    description: "Onlayn test tapsırıw platforması",
+  },
 };
 
 export const viewport: Viewport = {

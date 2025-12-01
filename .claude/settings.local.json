@@ -12,7 +12,8 @@
       "Bash(git remote add:*)",
       "Bash(git branch:*)",
       "Bash(git push:*)",
-      "Bash(npx next build)"
+      "Bash(npx next build)",
+      "WebFetch(domain:school-quiz-ten.vercel.app)"
     ],
     "deny": [],
     "ask": []
