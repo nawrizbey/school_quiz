@@ -305,6 +305,14 @@ import translations from '@/lib/translations'; // O'zbek
    - **Muammo:** Kun tekshiruvi noto'g'ri ishladi
    - **Yechim:** Kun tekshiruvi olib tashlandi, faqat vaqt bo'yicha ishlaydi
 
+5. **Test tahrirlash ishlamaydi (UPDATE/DELETE permissions)**
+   - **Muammo:** Super admin test tahrirlash va vaqt o'zgartirish ishlamaydi
+   - **Yechim:** `fix-quiz-update-policies.sql` faylini ishga tushiring
+   ```sql
+   -- Supabase SQL Editor'da ishga tushiring:
+   -- fix-quiz-update-policies.sql
+   ```
+
 ### Agar muammo yuz bersa:
 
 1. **Login ishlamasa:**
@@ -312,7 +320,8 @@ import translations from '@/lib/translations'; // O'zbek
    - Browser console'da xatolarni tekshiring
    - `.env.local` faylni tekshiring
 
-2. **Test yaratish ishlamasa:**
+2. **Test yaratish yoki tahrirlash ishlamasa:**
+   - Supabase database'ga `fix-quiz-update-policies.sql` faylini ishga tushiring
    - RLS policies to'g'ri sozlanganligini tekshiring
    - Console'da error message'ni o'qing
    - Barcha required fields to'ldirilganligini tekshiring
@@ -347,7 +356,8 @@ import translations from '@/lib/translations'; // O'zbek
 
 - **Batafsil dokumentatsiya:** `PROJECT_STATUS.md` faylini o'qing
 - **Database struktura:** `supabase-schema.sql` faylini ko'ring
-- **RLS policies:** `fix-rls.sql` faylini ishga tushiring
+- **RLS policies (Login uchun):** `fix-rls.sql` faylini ishga tushiring
+- **RLS policies (Test tahrirlash uchun):** `fix-quiz-update-policies.sql` faylini ishga tushiring
 - **Tarjimalar:** `lib/translations.kk.ts` (Qoraqalpoq), `lib/translations.ts` (O'zbek)
 
 ## 📄 License

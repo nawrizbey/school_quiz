@@ -175,7 +175,7 @@ export default function EditQuiz({ params }: { params: Promise<{ id: string }> }
       }
 
       // Update quiz
-      const { error: quizError } = await supabase
+      const { data: updateData, error: quizError } = await supabase
         .from('quizzes')
         .update({
           title,
@@ -186,9 +186,16 @@ export default function EditQuiz({ params }: { params: Promise<{ id: string }> }
           scheduled_time: scheduledTime + ':00',
           author_name: authorName,
         })
-        .eq('id', quizId);
+        .eq('id', quizId)
+        .select();
 
-      if (quizError) throw quizError;
+      if (quizError) {
+        console.error('Quiz update error:', quizError);
+        alert(`Test yangilanmadi! Xato: ${quizError.message}\n\nIltimos, Supabase'da fix-quiz-update-policies.sql faylini ishga tushiring.`);
+        throw quizError;
+      }
+
+      console.log('Quiz updated successfully:', updateData);
 
       // Delete old questions
       const { error: deleteError } = await supabase
@@ -196,7 +203,13 @@ export default function EditQuiz({ params }: { params: Promise<{ id: string }> }
         .delete()
         .eq('quiz_id', quizId);
 
-      if (deleteError) throw deleteError;
+      if (deleteError) {
+        console.error('Questions delete error:', deleteError);
+        alert(`Eski savollar o'chirilmadi! Xato: ${deleteError.message}`);
+        throw deleteError;
+      }
+
+      console.log('Old questions deleted successfully');
 
       // Insert new questions
       const questionsToInsert = questions.map((q, index) => ({
@@ -209,17 +222,24 @@ export default function EditQuiz({ params }: { params: Promise<{ id: string }> }
         option_images: q.option_images && Object.keys(q.option_images).length > 0 ? q.option_images : null,
       }));
 
-      const { error: questionsError } = await supabase
+      const { data: insertedQuestions, error: questionsError } = await supabase
         .from('questions')
-        .insert(questionsToInsert);
+        .insert(questionsToInsert)
+        .select();
 
-      if (questionsError) throw questionsError;
+      if (questionsError) {
+        console.error('Questions insert error:', questionsError);
+        alert(`Yangi savollar saqlanmadi! Xato: ${questionsError.message}`);
+        throw questionsError;
+      }
 
-      alert('Test muvaffaqiyatli o\'zgartirildi!');
+      console.log('New questions inserted successfully:', insertedQuestions);
+
+      alert('✅ Test muvaffaqiyatli o\'zgartirildi!');
       router.push('/admin/super-dashboard');
-    } catch (error) {
+    } catch (error: any) {
       console.error('Error updating quiz:', error);
-      alert('Test o\'zgartirishda xatolik yuz berdi');
+      alert(`❌ Test o'zgartirishda xatolik yuz berdi!\n\nXato: ${error.message || 'Unknown error'}\n\nIltimos, browser console'ni tekshiring.`);
     } finally {
       setSaving(false);
     }
