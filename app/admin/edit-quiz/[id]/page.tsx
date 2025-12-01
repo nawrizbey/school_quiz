@@ -85,8 +85,8 @@ export default function EditQuiz({ params }: { params: Promise<{ id: string }> }
   };
 
   const addQuestion = () => {
-    if (questions.length >= 20) {
-      alert(translations.createQuiz.maxQuestionsReached || 'Maksimal 20 ta savol qo\'shish mumkin');
+    if (questions.length >= 15) {
+      alert(translations.createQuiz.maxQuestionsReached || 'Maksimal 15 ta savol qo\'shish mumkin');
       return;
     }
     setQuestions([
@@ -144,6 +144,12 @@ export default function EditQuiz({ params }: { params: Promise<{ id: string }> }
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    // Prevent double-submit
+    if (saving) {
+      return; // Already saving, ignore
+    }
+
     setSaving(true);
 
     try {

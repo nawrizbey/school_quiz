@@ -24,7 +24,7 @@ export default function CreateQuiz() {
   const [scheduledTime, setScheduledTime] = useState('21:00');
   const [authorName, setAuthorName] = useState('');
   const [questions, setQuestions] = useState<QuestionData[]>(
-    Array(20).fill(null).map(() => ({
+    Array(15).fill(null).map(() => ({
       question_text: '',
       options: ['', '', '', ''],
       correct_option: 0,
@@ -61,8 +61,8 @@ export default function CreateQuiz() {
   }, [router]);
 
   const addQuestion = () => {
-    if (questions.length >= 20) {
-      alert(translations.createQuiz.maxQuestionsReached || 'Maksimal 20 ta savol qo\'shish mumkin');
+    if (questions.length >= 15) {
+      alert(translations.createQuiz.maxQuestionsReached || 'Maksimal 15 ta savol qo\'shish mumkin');
       return;
     }
     setQuestions([
@@ -120,6 +120,12 @@ export default function CreateQuiz() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    // Prevent double-submit
+    if (loading) {
+      return; // Already submitting, ignore
+    }
+
     setLoading(true);
 
     try {
