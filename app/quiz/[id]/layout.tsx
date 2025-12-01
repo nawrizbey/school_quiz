@@ -12,7 +12,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   try {
     const { data: quiz } = await supabase
       .from('quizzes')
-      .select('title, subject, description')
+      .select('title, subject, description, author_name, time_limit, scheduled_time')
       .eq('id', resolvedParams.id)
       .single();
 
@@ -23,6 +23,12 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       };
     }
 
+    // Get number of questions
+    const { count: questionCount } = await supabase
+      .from('questions')
+      .select('*', { count: 'exact', head: true })
+      .eq('quiz_id', resolvedParams.id);
+
     const subjects: { [key: string]: string } = {
       'matematika': 'Matematika',
       'biologiya': 'Biologiya',
@@ -32,8 +38,22 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     };
 
     const subjectLabel = subjects[quiz.subject] || quiz.subject;
+    const timeInMinutes = Math.floor(quiz.time_limit / 60);
+    const startTime = quiz.scheduled_time.slice(0, 5); // HH:MM
+    const questionsText = questionCount ? `${questionCount} soraw` : '';
+
     const title = `${quiz.title} - ${subjectLabel}`;
-    const description = quiz.description || `${subjectLabel} páninen test. Mektep o'qıwshıları ushın onlayn test.`;
+
+    // Rich description with all details
+    const descriptionParts = [
+      `📚 Pán: ${subjectLabel}`,
+      `✍️ Avtor: ${quiz.author_name}`,
+      questionsText ? `📝 ${questionsText}` : '',
+      `⏱ Waqıt: ${timeInMinutes} minut`,
+      `🕐 Baslanıw: ${startTime}`,
+    ].filter(Boolean);
+
+    const description = descriptionParts.join(' | ');
 
     return {
       title: title,
