@@ -199,7 +199,7 @@ export default function ManageTeachers() {
                         disabled={saving}
                         className="flex-1 bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded-lg transition-all disabled:opacity-50"
                       >
-                        ✗ Bes etiw
+                        ✗ Biykar etiw
                       </button>
                     </div>
                   </div>
