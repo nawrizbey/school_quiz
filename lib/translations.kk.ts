@@ -7,7 +7,7 @@ export const translations = {
     loading: 'Júklenbekte...',
     error: 'Qátelik',
     save: 'Saqlaw',
-    cancel: 'Qaytar',
+    cancel: 'Biykarlaw',
     delete: 'Óshiriw',
     edit: 'Ózgertiw',
     back: 'Artqa',
@@ -110,7 +110,7 @@ export const translations = {
   // Admin kiriw betı
   adminLogin: {
     title: 'Mugalimler kiriw',
-    subtitle: 'Test jaratıw hám nátiyjelerdı kóriwi ushın sistemagha kiriń',
+    subtitle: 'Muǵállimler jańa maǵlıwmatlar menen kiriw kerek',
     usernameLabel: 'Paydalanıwshı atı',
     passwordLabel: 'Parol',
     loginButton: 'Kiriw',
@@ -141,7 +141,7 @@ export const translations = {
   superAdminDashboard: {
     title: 'Super Admin Paneli',
     subtitle: 'Barlıq testler hám mugalimlerdı basqarıw',
-    totalTests: 'Jálpı testler',
+    totalTests: 'Jalpı testler',
     teachers: 'Mugalimler',
     subjects: 'Pánler',
     viewStats: 'Kóriw',
@@ -185,14 +185,14 @@ export const translations = {
   // Statistika betı
   statistics: {
     title: 'Statistika',
-    subtitle: 'Test nátiyjeleri hám tahlil',
+    subtitle: 'Test nátiyjeleri hám analiz',
     exportCSV: 'CSV eksport',
     selectQuiz: 'Test tańlań:',
     attempts: 'ta urınıs',
     totalAttempts: 'Jálpı urınıslar',
     averageScore: 'Ortasha ball',
     averageTime: 'Ortasha waqıt',
-    scoreDistribution: 'Ball taqsimleniwi',
+    scoreDistribution: 'Ball bólistiriliwi',
     lastTestTimes: 'Sońǵı 10 ta test waqtı (minut)',
     recentResults: 'Sońǵı nátiyeler',
     name: 'Atı',
@@ -202,7 +202,7 @@ export const translations = {
     time: 'Waqıt',
     date: 'Sene',
     noData: 'Maǵlıwmat joq',
-    noStatsYet: 'Jáne statistika bar emes',
+    noStatsYet: 'Jáne statistika maǵlıwmat emes',
   },
 
   // Pánler
@@ -217,12 +217,12 @@ export const translations = {
   // Hápte kúnleri
   days: {
     yakshanba: 'Yekshenbi',
-    dushanba: 'Dúyshenbi',
-    seshanba: 'Sayshanba',
-    chorshanba: 'Sárshenbi',
-    payshanba: 'Páyshenbi',
-    juma: 'Juma',
-    shanba: 'Shenbe',
+    dushanba: 'dúyshembi',
+    seshanba: 'seyshembi',
+    chorshanba: 'sárshembi',
+    payshanba: 'piyshembi',
+    juma: 'juma',
+    shanba: 'shembi',
   },
 
   // Tekseriwi xabarlari

@@ -1,19 +1,8 @@
 {
   "permissions": {
     "allow": [
-      "Bash(npx create-next-app@latest:*)",
-      "Bash(npm install)",
-      "Bash(npm run build:*)",
-      "Bash(npm run dev)",
-      "Bash(git init:*)",
-      "Bash(git add:*)",
-      "Bash(git commit:*)",
-      "Bash(git config:*)",
-      "Bash(git remote add:*)",
-      "Bash(git branch:*)",
-      "Bash(git push:*)",
-      "Bash(npx next build)",
-      "WebFetch(domain:school-quiz-ten.vercel.app)"
+      "Bash(npm run dev:*)",
+      "Bash(git add:*)"
     ],
     "deny": [],
     "ask": []

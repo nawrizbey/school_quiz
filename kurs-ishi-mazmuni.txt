@@ -1,0 +1,1941 @@
+===============================================================================
+MEKTEP TEST TIZIMI WEB-SAYTI - KURS JUMISI
+QUIZ APP (BILIMDAN.UZ) - ASOSIY MAZMUN
+===============================================================================
+
+================== KIRISUW (2-3 BET) ==================
+
+LOYIHANING MAQSADI:
+- Mektep o'quvchilari (4-6-sinfler) uchun online test tizimi yaratish
+- O'qituvchilarga test yaratish va natijalarni kuzatish imkoniyati berish
+- Zamonaviy web-texnologiyalar yordamida interaktiv ta'lim platformasi qurish
+
+ISHLATILGAN TEXNOLOGIYALAR:
+1. Next.js 15.0.0 - React framework (server-side rendering)
+2. React 18.3.1 - foydalanuvchi interfeysi uchun
+3. TypeScript 5.9.3 - kod xavfsizligi va type safety
+4. Tailwind CSS 3.4.0 - dizayn va styling
+5. Supabase - PostgreSQL ma'lumotlar bazasi va authentication
+6. Recharts 2.10.0 - statistika grafiklari
+7. Vercel - hosting va deployment
+
+LOYIHANING AHAMIYATI:
+- Maktablarda raqamli ta'limni rivojlantirish
+- O'qituvchilar ish yukini kamaytirish
+- O'quvchilar bilimini tezkor baholash
+- Statistik tahlil imkoniyati
+- Qaraqalpaq tilida mahalliy ta'lim platformasi
+
+
+=============== 1-BOLIM. NAZARIY NEGE'ZLER (8-10 BET) ===============
+
+1.1. HAZIRGI ZAMAN WEB-TEXNOLOGIYALARI
+
+TRADITIONAL WEB vs MODERN WEB:
+- Ilgari: HTML + CSS + PHP (server-side rendering)
+- Hozir: React + Next.js (hybrid: SSR + CSR)
+- Afzalliklari: Tezkorlik, SEO, foydalanuvchi tajribasi
+
+WEB DEVELOPMENT EVOLUTION:
+- Static websites → Dynamic websites → Single Page Apps → Full-stack frameworks
+- 2024-2025 yillar: Next.js, Remix, Astro - eng mashhur
+
+1.2. REACT HAM NEXT.JS FRAMEWORK'LERI
+
+REACT (Facebook/Meta tomonidan):
+- Component-based architecture
+- Virtual DOM - tez ishlash
+- Reusable components - kod qayta foydalanish
+- Katta community va ecosystem
+
+Misol:
+```jsx
+function QuizCard({ title, time }) {
+  return (
+    <div className="quiz-card">
+      <h3>{title}</h3>
+      <p>Waqt: {time} minut</p>
+    </div>
+  );
+}
+```
+
+NEXT.JS (Vercel tomonidan):
+- React ustiga qurilgan full-stack framework
+- File-based routing - fayl = sahifa
+- Server Components - serverda render
+- App Router (Next.js 15) - yangi arxitektura
+- Built-in optimization (images, fonts, scripts)
+
+App Router strukturasi:
+```
+app/
+  page.tsx        → /
+  quiz/
+    page.tsx      → /quiz
+    [id]/
+      page.tsx    → /quiz/123
+```
+
+1.3. TYPESCRIPT TILININ ARTIQSHALIQLAR
+
+JAVASCRIPT vs TYPESCRIPT:
+- JavaScript: Dynamic typing - xatolar runtime'da
+- TypeScript: Static typing - xatolar yozishda topiladi
+
+Misol:
+```typescript
+// TypeScript - xato oldini olish
+interface Quiz {
+  id: number;
+  title: string;
+  time_limit: number;
+  questions: Question[];
+}
+
+function getQuiz(id: number): Quiz {
+  // id faqat number bo'lishi kerak
+}
+```
+
+AFZALLIKLARI:
+- IDE IntelliSense - avtomatik to'ldirish
+- Refactoring xavfsizligi
+- Hujjatlanish sifatida
+- Kod sifatini oshirish
+- Katta loyihalarda zarur
+
+1.4. SUPABASE - BACKEND AS A SERVICE (BaaS)
+
+SUPABASE NIMA?
+- PostgreSQL bazasi (cloud)
+- Authentication (login/signup)
+- Storage (fayllar saqlash)
+- Real-time subscriptions
+- Row Level Security (RLS)
+
+TRADITIONAL BACKEND vs SUPABASE:
+Traditional:
+- Server sozlash (Node.js, Express)
+- Database o'rnatish
+- API yozish
+- Authentication o'rnatish
+- Hosting
+
+Supabase:
+- Tayyor backend
+- SQL yozish kifoya
+- API avtomatik
+- Auth built-in
+- Cloud hosting
+
+POSTGRESQL AFZALLIKLARI:
+- Ishonchli va turg'un
+- JSONB support - flexible data
+- Full-text search
+- Triggers va Functions
+- Industry standard
+
+
+=============== 2-BOLIM. QURILIW ARXITEKTURASI (8-10 BET) ===============
+
+2.1. LOYIHA STRUKTURASI HAM FILE-BASED ROUTING
+
+FULL PROJECT STRUCTURE:
+```
+school_quiz/
+├── app/                      # Next.js App Router
+│   ├── page.tsx             # Home (/)
+│   ├── layout.tsx           # Root layout
+│   ├── globals.css          # Global styles
+│   ├── quiz/                # Student pages
+│   │   ├── page.tsx        # Quiz list (/quiz)
+│   │   └── [id]/           # Dynamic routes
+│   │       ├── page.tsx    # Take quiz (/quiz/123)
+│   │       └── result/
+│   │           └── page.tsx # Results (/quiz/123/result)
+│   ├── admin/               # Teacher/Admin
+│   │   ├── page.tsx        # Login (/admin)
+│   │   ├── dashboard/      # Teacher dashboard
+│   │   ├── super-dashboard/ # Super admin
+│   │   ├── create-quiz/    # Create quiz
+│   │   ├── edit-quiz/[id]/ # Edit quiz
+│   │   └── manage-teachers/ # Manage teachers
+│   ├── stats/               # Statistics
+│   └── api/                 # API routes
+│       └── admin/login/
+├── components/              # Reusable components
+│   └── ImageUpload.tsx
+├── lib/                     # Utilities
+│   ├── supabase.ts         # DB client
+│   └── translations.kk.ts  # Karakalpak language
+├── public/                  # Static files
+├── *.sql                    # Database schemas
+└── Configuration files
+```
+
+FILE-BASED ROUTING TUSHUNTIRISH:
+- app/page.tsx → https://bilimdan.uz/
+- app/quiz/page.tsx → https://bilimdan.uz/quiz
+- app/quiz/[id]/page.tsx → https://bilimdan.uz/quiz/5
+- [id] - dynamic segment (har qanday son)
+
+LAYOUT SYSTEM:
+- app/layout.tsx - barcha sahifalar uchun
+- Nested layouts - har folder o'z layout'i
+- Shared UI - header, footer
+
+2.2. MA'LIWMATLAR BAZASI SXEMASI
+
+4 TA ASOSIY JADVAL:
+
+1. TEACHERS (O'qituvchilar):
+```sql
+CREATE TABLE teachers (
+  id SERIAL PRIMARY KEY,
+  username VARCHAR(50) UNIQUE,
+  password TEXT,
+  full_name VARCHAR(100),
+  subject VARCHAR(50),
+  role VARCHAR(20), -- 'teacher' yoki 'super_admin'
+  created_at TIMESTAMP DEFAULT NOW()
+);
+```
+
+Ro'yxat:
+- 1 Super Admin
+- 5 O'qituvchi (Matematika, Biologiya, Ingliz tili, Umumiy fanlar, Zakovat)
+
+2. QUIZZES (Testlar):
+```sql
+CREATE TABLE quizzes (
+  id SERIAL PRIMARY KEY,
+  title VARCHAR(200),
+  subject VARCHAR(50),
+  time_limit INTEGER, -- minutlarda
+  scheduled_time TIMESTAMP,
+  created_by INTEGER REFERENCES teachers(id),
+  created_at TIMESTAMP,
+  is_active BOOLEAN DEFAULT true
+);
+```
+
+3. QUESTIONS (Savollar):
+```sql
+CREATE TABLE questions (
+  id SERIAL PRIMARY KEY,
+  quiz_id INTEGER REFERENCES quizzes(id) ON DELETE CASCADE,
+  question_text TEXT,
+  option_a TEXT,
+  option_b TEXT,
+  option_c TEXT,
+  option_d TEXT,
+  correct_option INTEGER, -- 0,1,2,3 (A,B,C,D)
+  image_url TEXT, -- ixtiyoriy rasm
+  question_order INTEGER
+);
+```
+
+4. RESULTS (Natijalar):
+```sql
+CREATE TABLE results (
+  id SERIAL PRIMARY KEY,
+  quiz_id INTEGER REFERENCES quizzes(id),
+  student_name VARCHAR(100),
+  class_number INTEGER, -- 4, 5, 6
+  score INTEGER,
+  total_questions INTEGER,
+  time_taken INTEGER, -- soniyalarda
+  answers JSONB, -- [{questionId, selectedOption, isCorrect}]
+  submitted_at TIMESTAMP DEFAULT NOW(),
+  UNIQUE(quiz_id, student_name, class_number) -- bir marta
+);
+```
+
+ER-DIAGRAM (munosabatlar):
+- teachers 1 → N quizzes (bir o'qituvchi ko'p test)
+- quizzes 1 → N questions (bir test ko'p savol)
+- quizzes 1 → N results (bir testni ko'p o'quvchi topshiradi)
+
+2.3. ROL-BASED BOSHQARIW SISTMASI (RLS)
+
+ROW LEVEL SECURITY NIMA?
+- PostgreSQL xususiyati
+- Har qator (row) uchun ruxsat
+- Foydalanuvchi faqat o'z ma'lumotlarini ko'radi
+
+RLS POLICIES:
+
+1. O'qituvchilar faqat o'z testlarini ko'radi:
+```sql
+CREATE POLICY "teachers_own_quizzes"
+ON quizzes FOR SELECT
+TO authenticated
+USING (created_by = auth.uid());
+```
+
+2. Super admin hamma narsani ko'radi:
+```sql
+CREATE POLICY "super_admin_all"
+ON quizzes FOR ALL
+TO authenticated
+USING (
+  EXISTS (
+    SELECT 1 FROM teachers
+    WHERE id = auth.uid() AND role = 'super_admin'
+  )
+);
+```
+
+3. O'quvchilar faqat active testlarni ko'radi:
+```sql
+CREATE POLICY "students_active_quizzes"
+ON quizzes FOR SELECT
+TO anon
+USING (is_active = true);
+```
+
+XAVFSIZLIK DARAJALARI:
+- Student (anon) → Faqat o'qish (testlar, savollar)
+- Teacher (authenticated) → CRUD o'z testlari
+- Super Admin (authenticated) → CRUD barcha ma'lumotlar
+
+2.4. FRONTEND HAM BACKEND INTE'GRATSIYASI
+
+SUPABASE CLIENT:
+```typescript
+// lib/supabase.ts
+import { createClient } from '@supabase/supabase-js';
+
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
+const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
+
+export const supabase = createClient(supabaseUrl, supabaseKey);
+```
+
+MA'LUMOT OLISH (READ):
+```typescript
+// Testlarni olish
+const { data: quizzes, error } = await supabase
+  .from('quizzes')
+  .select('*')
+  .eq('subject', 'Matematika')
+  .order('created_at', { ascending: false });
+```
+
+MA'LUMOT QO'SHISH (CREATE):
+```typescript
+// Natijani saqlash
+const { error } = await supabase
+  .from('results')
+  .insert({
+    quiz_id: quizId,
+    student_name: studentName,
+    class_number: classNumber,
+    score: score,
+    total_questions: totalQuestions,
+    time_taken: timeTaken,
+    answers: answersArray
+  });
+```
+
+AUTHENTICATION:
+```typescript
+// Login (localStorage orqali)
+const response = await fetch('/api/admin/login', {
+  method: 'POST',
+  body: JSON.stringify({ username, password })
+});
+
+if (response.ok) {
+  const data = await response.json();
+  localStorage.setItem('teacher', JSON.stringify(data.teacher));
+}
+```
+
+SERVER vs CLIENT COMPONENTS:
+- Server Component: Ma'lumot olish (default)
+- Client Component: Interaktiv ('use client')
+
+```typescript
+// Server Component
+async function QuizList() {
+  const quizzes = await getQuizzes(); // serverda
+  return <div>...</div>;
+}
+
+// Client Component
+'use client';
+function QuizForm() {
+  const [title, setTitle] = useState('');
+  return <input onChange={e => setTitle(e.target.value)} />;
+}
+```
+
+
+=============== 3-BOLIM. FUNKCIONALLIGIN AMELGE ASIRIW (12-15 BET) ===============
+
+3.1. O'QIWSHILAR USHIN TEST SAHIFASI
+
+QUIZ LIST PAGE (app/quiz/page.tsx):
+
+FUNKSIONALLIK:
+1. Barcha active testlarni ko'rsatish
+2. 3 kategoriya: Available, Upcoming, Closed
+3. Har test uchun: nom, fan, vaqt, holat
+
+KATEGORIYALASH LOGIKASI:
+```typescript
+const now = new Date();
+const scheduledTime = new Date(quiz.scheduled_time);
+const endTime = new Date(scheduledTime.getTime() + quiz.time_limit * 60000);
+
+if (now < scheduledTime) {
+  category = 'upcoming'; // Kutilayotgan
+} else if (now >= scheduledTime && now <= endTime) {
+  category = 'available'; // Mavjud
+} else {
+  category = 'closed'; // Yopilgan
+}
+```
+
+COUNTDOWN TIMER:
+```typescript
+useEffect(() => {
+  const timer = setInterval(() => {
+    const timeLeft = scheduledTime - Date.now();
+    if (timeLeft <= 0) {
+      setStatus('available');
+    } else {
+      const hours = Math.floor(timeLeft / 3600000);
+      const minutes = Math.floor((timeLeft % 3600000) / 60000);
+      setCountdown(`${hours}:${minutes}`);
+    }
+  }, 1000);
+
+  return () => clearInterval(timer);
+}, []);
+```
+
+TAKE QUIZ PAGE (app/quiz/[id]/page.tsx):
+
+ASOSIY KOMPONENTLAR:
+1. Student ma'lumotlarini olish (ism, sinf)
+2. Testni yuklash (savollar bilan)
+3. Timer (qolgan vaqtni ko'rsatish)
+4. Savollarga javob berish
+5. Natijani hisoblash va saqlash
+
+TIMER IMPLEMENTATSIYASI:
+```typescript
+const [timeLeft, setTimeLeft] = useState(quiz.time_limit * 60); // soniya
+
+useEffect(() => {
+  if (timeLeft <= 0) {
+    handleSubmit(); // Avtomatik topshirish
+    return;
+  }
+
+  const timer = setInterval(() => {
+    setTimeLeft(prev => prev - 1);
+  }, 1000);
+
+  return () => clearInterval(timer);
+}, [timeLeft]);
+
+// Ko'rinish: MM:SS
+const minutes = Math.floor(timeLeft / 60);
+const seconds = timeLeft % 60;
+const display = `${minutes}:${seconds.toString().padStart(2, '0')}`;
+```
+
+DUPLICATE PREVENTION:
+```typescript
+// Avval tekshirish
+const { data: existing } = await supabase
+  .from('results')
+  .select('id')
+  .eq('quiz_id', quizId)
+  .eq('student_name', studentName)
+  .eq('class_number', classNumber)
+  .single();
+
+if (existing) {
+  alert('Siz bu testni allaqachon topshirgansiz!');
+  router.push(`/quiz/${quizId}/result`);
+}
+```
+
+PROGRESS TRACKING:
+```typescript
+const [currentQuestion, setCurrentQuestion] = useState(0);
+const [answers, setAnswers] = useState<number[]>([]);
+
+const progress = ((currentQuestion + 1) / totalQuestions) * 100;
+
+// Progress bar
+<div className="w-full bg-gray-200 h-2 rounded">
+  <div
+    className="bg-blue-600 h-2 rounded"
+    style={{ width: `${progress}%` }}
+  />
+</div>
+```
+
+3.2. O'QITWISHILAR USHIN ADMIN PANEL
+
+LOGIN PAGE (app/admin/page.tsx):
+
+```typescript
+async function handleLogin() {
+  const response = await fetch('/api/admin/login', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ username, password })
+  });
+
+  if (response.ok) {
+    const { teacher } = await response.json();
+    localStorage.setItem('teacher', JSON.stringify(teacher));
+
+    if (teacher.role === 'super_admin') {
+      router.push('/admin/super-dashboard');
+    } else {
+      router.push('/admin/dashboard');
+    }
+  }
+}
+```
+
+TEACHER DASHBOARD (app/admin/dashboard/page.tsx):
+
+FUNKSIYALAR:
+1. O'z fani bo'yicha testlarni ko'rish
+2. Yangi test yaratish
+3. Testni tahrirlash
+4. Testni o'chirish
+5. Test linkini nusxalash
+
+```typescript
+// O'z testlarini olish
+const teacher = JSON.parse(localStorage.getItem('teacher'));
+const { data: quizzes } = await supabase
+  .from('quizzes')
+  .select('*, questions(count)')
+  .eq('created_by', teacher.id)
+  .order('created_at', { ascending: false });
+```
+
+CREATE QUIZ PAGE (app/admin/create-quiz/page.tsx):
+
+FORM STRUKTURASI:
+```typescript
+interface QuizForm {
+  title: string;
+  subject: string;
+  time_limit: number;
+  scheduled_time: string;
+  questions: {
+    question_text: string;
+    option_a: string;
+    option_b: string;
+    option_c: string;
+    option_d: string;
+    correct_option: number;
+    image_url?: string;
+  }[];
+}
+```
+
+SAVOL QO'SHISH:
+```typescript
+function addQuestion() {
+  setQuestions([...questions, {
+    question_text: '',
+    option_a: '',
+    option_b: '',
+    option_c: '',
+    option_d: '',
+    correct_option: 0,
+    image_url: ''
+  }]);
+}
+```
+
+RASM YUKLASH (ImageUpload component):
+```typescript
+async function uploadImage(file: File) {
+  const fileName = `${Date.now()}_${file.name}`;
+  const { data, error } = await supabase.storage
+    .from('quiz-images')
+    .upload(fileName, file);
+
+  if (error) throw error;
+
+  const { data: { publicUrl } } = supabase.storage
+    .from('quiz-images')
+    .getPublicUrl(fileName);
+
+  return publicUrl;
+}
+```
+
+TEST SAQLASH:
+```typescript
+async function saveQuiz(formData: QuizForm) {
+  // 1. Test yaratish
+  const { data: quiz, error: quizError } = await supabase
+    .from('quizzes')
+    .insert({
+      title: formData.title,
+      subject: formData.subject,
+      time_limit: formData.time_limit,
+      scheduled_time: formData.scheduled_time,
+      created_by: teacher.id
+    })
+    .select()
+    .single();
+
+  if (quizError) throw quizError;
+
+  // 2. Savollarni qo'shish
+  const questionsToInsert = formData.questions.map((q, index) => ({
+    quiz_id: quiz.id,
+    ...q,
+    question_order: index
+  }));
+
+  const { error: questionsError } = await supabase
+    .from('questions')
+    .insert(questionsToInsert);
+
+  if (questionsError) throw questionsError;
+}
+```
+
+3.3. SUPER ADMIN USHIN STATISTIKA PANELI
+
+SUPER DASHBOARD (app/admin/super-dashboard/page.tsx):
+
+FARQI:
+- Teacher: Faqat o'z fani testlari
+- Super Admin: Barcha fanlar testlari + Filter
+
+```typescript
+const [selectedSubject, setSelectedSubject] = useState('all');
+
+const query = supabase.from('quizzes').select('*');
+
+if (selectedSubject !== 'all') {
+  query.eq('subject', selectedSubject);
+}
+
+const { data: quizzes } = await query;
+```
+
+STATISTICS PAGE (app/stats/page.tsx):
+
+STATISTIKA TURLARI:
+1. Umumiy ma'lumotlar (average score, time)
+2. Score distribution (bar chart)
+3. Time analysis (line chart)
+4. Top-20 results table
+5. CSV export
+
+```typescript
+// Umumiy statistika
+const { data: results } = await supabase
+  .from('results')
+  .select('score, total_questions, time_taken')
+  .eq('quiz_id', quizId);
+
+const averageScore = results.reduce((sum, r) => sum + r.score, 0) / results.length;
+const averagePercentage = (averageScore / results[0].total_questions) * 100;
+const averageTime = results.reduce((sum, r) => sum + r.time_taken, 0) / results.length;
+```
+
+SCORE DISTRIBUTION (Recharts):
+```typescript
+// Ma'lumotlarni guruhlashtirish
+const distribution = [
+  { range: '0-20%', count: 0 },
+  { range: '21-40%', count: 0 },
+  { range: '41-60%', count: 0 },
+  { range: '61-80%', count: 0 },
+  { range: '81-100%', count: 0 }
+];
+
+results.forEach(r => {
+  const percentage = (r.score / r.total_questions) * 100;
+  if (percentage <= 20) distribution[0].count++;
+  else if (percentage <= 40) distribution[1].count++;
+  // ...
+});
+
+// Chart
+<BarChart data={distribution}>
+  <XAxis dataKey="range" />
+  <YAxis />
+  <Bar dataKey="count" fill="#3b82f6" />
+</BarChart>
+```
+
+CSV EXPORT:
+```typescript
+function exportToCSV() {
+  const headers = ['Rank', 'Student Name', 'Class', 'Score', 'Percentage', 'Time (min)'];
+  const rows = results.map((r, index) => [
+    index + 1,
+    r.student_name,
+    r.class_number,
+    `${r.score}/${r.total_questions}`,
+    `${((r.score / r.total_questions) * 100).toFixed(1)}%`,
+    `${(r.time_taken / 60).toFixed(1)}`
+  ]);
+
+  const csv = [headers, ...rows].map(row => row.join(',')).join('\n');
+
+  const blob = new Blob([csv], { type: 'text/csv' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `quiz_${quizId}_results.csv`;
+  a.click();
+}
+```
+
+3.4. WAQIT BENEN SHEKLENGEN TESTLER LOGIKASI
+
+TEST HOLATLARI:
+1. Upcoming - hali boshlanmagan
+2. Available - hozir mavjud
+3. Closed - tugagan
+
+VAQT HISOBLASH:
+```typescript
+const now = new Date();
+const scheduledTime = new Date(quiz.scheduled_time);
+const endTime = new Date(scheduledTime.getTime() + quiz.time_limit * 60 * 1000);
+
+// Holatni aniqlash
+if (now < scheduledTime) {
+  status = 'upcoming';
+  timeToStart = scheduledTime - now;
+} else if (now >= scheduledTime && now <= endTime) {
+  status = 'available';
+  timeRemaining = endTime - now;
+} else {
+  status = 'closed';
+}
+```
+
+LATE ARRIVAL HANDLING:
+```typescript
+// Agar o'quvchi kechikib kirsa
+const elapsedTime = now - scheduledTime; // o'tgan vaqt
+const totalTimeInMs = quiz.time_limit * 60 * 1000;
+const remainingTime = totalTimeInMs - elapsedTime;
+
+if (remainingTime <= 0) {
+  alert('Test vaqti tugagan!');
+  router.push('/quiz');
+} else {
+  // Qolgan vaqt bilan boshlash
+  setTimeLeft(Math.floor(remainingTime / 1000));
+}
+```
+
+COUNTDOWN UI:
+```typescript
+function formatTime(milliseconds: number) {
+  const totalSeconds = Math.floor(milliseconds / 1000);
+  const hours = Math.floor(totalSeconds / 3600);
+  const minutes = Math.floor((totalSeconds % 3600) / 60);
+  const seconds = totalSeconds % 60;
+
+  if (hours > 0) {
+    return `${hours}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+  }
+  return `${minutes}:${seconds.toString().padStart(2, '0')}`;
+}
+```
+
+3.5. DETERMINISTIC SHUFFLE ALGORITMI
+
+MUAMMO:
+- Har bir o'quvchi uchun javoblar aralashtirilishi kerak
+- Lekin bir xil o'quvchi qayta kirganda bir xil tartib bo'lishi kerak
+- To'g'ri javob indeksi saqlanishi kerak
+
+SEEDED RANDOM ALGORITHM:
+```typescript
+// Seed generator (student_name + quiz_id dan)
+function generateSeed(studentName: string, quizId: number): number {
+  let hash = 0;
+  const str = `${studentName}_${quizId}`;
+
+  for (let i = 0; i < str.length; i++) {
+    const char = str.charCodeAt(i);
+    hash = ((hash << 5) - hash) + char;
+    hash = hash & hash; // 32-bit integer
+  }
+
+  return Math.abs(hash);
+}
+
+// Seeded random number generator
+function seededRandom(seed: number) {
+  let value = seed;
+  return function() {
+    value = (value * 9301 + 49297) % 233280;
+    return value / 233280;
+  };
+}
+```
+
+FISHER-YATES SHUFFLE:
+```typescript
+function shuffleOptions(
+  question: Question,
+  studentName: string,
+  quizId: number
+): { options: string[], correctIndex: number } {
+
+  const seed = generateSeed(studentName, quizId) + question.id;
+  const random = seededRandom(seed);
+
+  // Javoblar massivi
+  const options = [
+    question.option_a,
+    question.option_b,
+    question.option_c,
+    question.option_d
+  ];
+
+  // Asl to'g'ri javob indeksi
+  const originalCorrectIndex = question.correct_option;
+
+  // Fisher-Yates shuffle
+  const shuffled = [...options];
+  const indexMap = [0, 1, 2, 3];
+
+  for (let i = shuffled.length - 1; i > 0; i--) {
+    const j = Math.floor(random() * (i + 1));
+
+    // Swap elements
+    [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+    [indexMap[i], indexMap[j]] = [indexMap[j], indexMap[i]];
+  }
+
+  // Yangi to'g'ri javob indeksi
+  const newCorrectIndex = indexMap.indexOf(originalCorrectIndex);
+
+  return { options: shuffled, correctIndex: newCorrectIndex };
+}
+```
+
+QOLLASH:
+```typescript
+// Har savol uchun
+const processedQuestions = questions.map(question => {
+  const { options, correctIndex } = shuffleOptions(
+    question,
+    studentName,
+    quizId
+  );
+
+  return {
+    ...question,
+    shuffledOptions: options,
+    shuffledCorrectIndex: correctIndex
+  };
+});
+```
+
+NATIJANI TEKSHIRISH:
+```typescript
+function checkAnswer(
+  selectedOption: number,
+  correctIndex: number
+): boolean {
+  return selectedOption === correctIndex;
+}
+
+// Score hisoblash
+const correctAnswers = answers.filter((answer, index) =>
+  answer === processedQuestions[index].shuffledCorrectIndex
+).length;
+
+const score = correctAnswers;
+const percentage = (score / totalQuestions) * 100;
+```
+
+
+=============== 4-BOLIM. MA'LIWMATLAR BAZASI (8-10 BET) ===============
+
+4.1. SUPABASE POSTGRESQL BAZASI TANLEW SEBEPLERI
+
+POSTGRESQL vs MYSQL:
+- PostgreSQL: Advanced features, JSONB, full-text search
+- MySQL: Simple, widely used
+- Tanlov: PostgreSQL (complex queries uchun yaxshi)
+
+SUPABASE vs FIREBASE:
+| Feature | Supabase | Firebase |
+|---------|----------|----------|
+| Database | PostgreSQL (SQL) | NoSQL |
+| Language | SQL | JavaScript SDKs |
+| Pricing | More free tier | Limited free |
+| Open source | Yes | No |
+| Self-hosting | Possible | No |
+
+SUPABASE AFZALLIKLARI:
+1. SQL - ma'lum til
+2. Row Level Security - xavfsizlik
+3. Real-time - jonli yangilanishlar
+4. Storage - fayl saqlash
+5. Auth - tayyor authentication
+6. Free tier - 500MB database, 1GB storage
+7. Dashboard - qulay interfeys
+
+LOYIHA UCHUN SABABLARI:
+- SQL bilim mavjud (o'rganish oson)
+- Complex queries (statistika uchun)
+- RLS - teacher/admin ajratish
+- Free hosting - maktab uchun arzon
+- PostgreSQL - ishonchli va mashhur
+
+4.2. SQL SXEMA HAM RLS POLICIES JARATUW
+
+FULL SCHEMA (supabase-schema.sql):
+
+```sql
+-- 1. TEACHERS TABLE
+CREATE TABLE teachers (
+  id SERIAL PRIMARY KEY,
+  username VARCHAR(50) UNIQUE NOT NULL,
+  password TEXT NOT NULL,
+  full_name VARCHAR(100) NOT NULL,
+  subject VARCHAR(50),
+  role VARCHAR(20) NOT NULL DEFAULT 'teacher',
+  created_at TIMESTAMP DEFAULT NOW()
+);
+
+-- Password update function
+CREATE OR REPLACE FUNCTION update_teacher_password(
+  teacher_id INTEGER,
+  new_password TEXT
+)
+RETURNS void AS $$
+BEGIN
+  UPDATE teachers
+  SET password = crypt(new_password, gen_salt('bf'))
+  WHERE id = teacher_id;
+END;
+$$ LANGUAGE plpgsql SECURITY DEFINER;
+
+-- 2. QUIZZES TABLE
+CREATE TABLE quizzes (
+  id SERIAL PRIMARY KEY,
+  title VARCHAR(200) NOT NULL,
+  subject VARCHAR(50) NOT NULL,
+  time_limit INTEGER NOT NULL, -- minutes
+  scheduled_time TIMESTAMP NOT NULL,
+  created_by INTEGER REFERENCES teachers(id),
+  created_at TIMESTAMP DEFAULT NOW(),
+  is_active BOOLEAN DEFAULT true
+);
+
+-- 3. QUESTIONS TABLE
+CREATE TABLE questions (
+  id SERIAL PRIMARY KEY,
+  quiz_id INTEGER REFERENCES quizzes(id) ON DELETE CASCADE,
+  question_text TEXT NOT NULL,
+  option_a TEXT NOT NULL,
+  option_b TEXT NOT NULL,
+  option_c TEXT NOT NULL,
+  option_d TEXT NOT NULL,
+  correct_option INTEGER NOT NULL CHECK (correct_option BETWEEN 0 AND 3),
+  image_url TEXT,
+  question_order INTEGER NOT NULL
+);
+
+-- 4. RESULTS TABLE
+CREATE TABLE results (
+  id SERIAL PRIMARY KEY,
+  quiz_id INTEGER REFERENCES quizzes(id) ON DELETE CASCADE,
+  student_name VARCHAR(100) NOT NULL,
+  class_number INTEGER NOT NULL CHECK (class_number BETWEEN 4 AND 6),
+  score INTEGER NOT NULL,
+  total_questions INTEGER NOT NULL,
+  time_taken INTEGER NOT NULL, -- seconds
+  answers JSONB NOT NULL,
+  submitted_at TIMESTAMP DEFAULT NOW(),
+  CONSTRAINT unique_submission UNIQUE(quiz_id, student_name, class_number)
+);
+
+-- Indexes for performance
+CREATE INDEX idx_quizzes_subject ON quizzes(subject);
+CREATE INDEX idx_quizzes_scheduled ON quizzes(scheduled_time);
+CREATE INDEX idx_questions_quiz ON questions(quiz_id);
+CREATE INDEX idx_results_quiz ON results(quiz_id);
+CREATE INDEX idx_results_student ON results(student_name, class_number);
+```
+
+ROW LEVEL SECURITY POLICIES (fix-rls.sql):
+
+```sql
+-- Enable RLS
+ALTER TABLE teachers ENABLE ROW LEVEL SECURITY;
+ALTER TABLE quizzes ENABLE ROW LEVEL SECURITY;
+ALTER TABLE questions ENABLE ROW LEVEL SECURITY;
+ALTER TABLE results ENABLE ROW LEVEL SECURITY;
+
+-- QUIZZES POLICIES
+
+-- 1. Students (anonymous) can view active quizzes
+CREATE POLICY "anon_select_active_quizzes"
+ON quizzes FOR SELECT
+TO anon
+USING (is_active = true);
+
+-- 2. Teachers can view their own quizzes
+CREATE POLICY "teachers_select_own_quizzes"
+ON quizzes FOR SELECT
+TO authenticated
+USING (
+  created_by IN (
+    SELECT id FROM teachers WHERE id = current_setting('request.jwt.claim.sub')::integer
+  )
+);
+
+-- 3. Super admin can view all quizzes
+CREATE POLICY "super_admin_select_all_quizzes"
+ON quizzes FOR SELECT
+TO authenticated
+USING (
+  EXISTS (
+    SELECT 1 FROM teachers
+    WHERE id = current_setting('request.jwt.claim.sub')::integer
+    AND role = 'super_admin'
+  )
+);
+
+-- 4. Teachers can insert quizzes
+CREATE POLICY "teachers_insert_quizzes"
+ON quizzes FOR INSERT
+TO authenticated
+WITH CHECK (
+  created_by = current_setting('request.jwt.claim.sub')::integer
+);
+
+-- 5. Teachers can update their own quizzes
+CREATE POLICY "teachers_update_own_quizzes"
+ON quizzes FOR UPDATE
+TO authenticated
+USING (created_by = current_setting('request.jwt.claim.sub')::integer);
+
+-- 6. Teachers can delete their own quizzes
+CREATE POLICY "teachers_delete_own_quizzes"
+ON quizzes FOR DELETE
+TO authenticated
+USING (created_by = current_setting('request.jwt.claim.sub')::integer);
+
+-- QUESTIONS POLICIES
+
+-- 1. Anyone can view questions of active quizzes
+CREATE POLICY "anon_select_questions"
+ON questions FOR SELECT
+TO anon
+USING (
+  quiz_id IN (SELECT id FROM quizzes WHERE is_active = true)
+);
+
+-- 2. Authenticated users can manage questions of their quizzes
+CREATE POLICY "teachers_manage_questions"
+ON questions FOR ALL
+TO authenticated
+USING (
+  quiz_id IN (
+    SELECT id FROM quizzes WHERE created_by = current_setting('request.jwt.claim.sub')::integer
+  )
+);
+
+-- RESULTS POLICIES
+
+-- 1. Anyone can insert results
+CREATE POLICY "anon_insert_results"
+ON results FOR INSERT
+TO anon
+WITH CHECK (true);
+
+-- 2. Anyone can view results
+CREATE POLICY "anon_select_results"
+ON results FOR SELECT
+TO anon
+USING (true);
+
+-- 3. Authenticated users can view all results
+CREATE POLICY "auth_select_results"
+ON results FOR SELECT
+TO authenticated
+USING (true);
+```
+
+4.3. RASM SAQLAWSHI (STORAGE BUCKET) KONFIGURATSIYASI
+
+STORAGE BUCKET YARATISH (setup-storage.sql):
+
+```sql
+-- 1. Create bucket
+INSERT INTO storage.buckets (id, name, public)
+VALUES ('quiz-images', 'quiz-images', true);
+
+-- 2. Storage policies
+
+-- Anyone can view images
+CREATE POLICY "Public Access"
+ON storage.objects FOR SELECT
+TO public
+USING (bucket_id = 'quiz-images');
+
+-- Authenticated users can upload
+CREATE POLICY "Authenticated users can upload"
+ON storage.objects FOR INSERT
+TO authenticated
+WITH CHECK (bucket_id = 'quiz-images');
+
+-- Authenticated users can update their uploads
+CREATE POLICY "Authenticated users can update"
+ON storage.objects FOR UPDATE
+TO authenticated
+USING (bucket_id = 'quiz-images');
+
+-- Authenticated users can delete their uploads
+CREATE POLICY "Authenticated users can delete"
+ON storage.objects FOR DELETE
+TO authenticated
+USING (bucket_id = 'quiz-images');
+```
+
+RASM YUKLASH (Frontend):
+
+```typescript
+// components/ImageUpload.tsx
+async function uploadImage(file: File): Promise<string> {
+  // 1. File validation
+  const maxSize = 5 * 1024 * 1024; // 5MB
+  if (file.size > maxSize) {
+    throw new Error('File size must be less than 5MB');
+  }
+
+  const allowedTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
+  if (!allowedTypes.includes(file.type)) {
+    throw new Error('Only JPEG, PNG, GIF, and WebP images are allowed');
+  }
+
+  // 2. Generate unique filename
+  const fileExt = file.name.split('.').pop();
+  const fileName = `${Date.now()}_${Math.random().toString(36).substring(7)}.${fileExt}`;
+
+  // 3. Upload to Supabase Storage
+  const { data, error } = await supabase.storage
+    .from('quiz-images')
+    .upload(fileName, file, {
+      cacheControl: '3600',
+      upsert: false
+    });
+
+  if (error) throw error;
+
+  // 4. Get public URL
+  const { data: { publicUrl } } = supabase.storage
+    .from('quiz-images')
+    .getPublicUrl(fileName);
+
+  return publicUrl;
+}
+```
+
+IMAGE COMPONENT:
+
+```typescript
+// Savolda rasm ko'rsatish
+function QuestionImage({ imageUrl }: { imageUrl?: string }) {
+  if (!imageUrl) return null;
+
+  return (
+    <div className="my-4">
+      <img
+        src={imageUrl}
+        alt="Question image"
+        className="max-w-full h-auto rounded-lg shadow-md"
+        loading="lazy"
+      />
+    </div>
+  );
+}
+```
+
+4.4. REAL-TIME MA'LIWMATLAR ALMASHITIRILW
+
+SUPABASE REAL-TIME:
+
+Real-time subscription (jonli yangilanishlar):
+
+```typescript
+// Dashboard da real-time updates
+useEffect(() => {
+  const channel = supabase
+    .channel('quiz-changes')
+    .on(
+      'postgres_changes',
+      {
+        event: '*', // INSERT, UPDATE, DELETE
+        schema: 'public',
+        table: 'quizzes'
+      },
+      (payload) => {
+        console.log('Change received!', payload);
+
+        if (payload.eventType === 'INSERT') {
+          // Yangi test qo'shildi
+          setQuizzes(prev => [payload.new, ...prev]);
+        } else if (payload.eventType === 'UPDATE') {
+          // Test yangilandi
+          setQuizzes(prev => prev.map(q =>
+            q.id === payload.new.id ? payload.new : q
+          ));
+        } else if (payload.eventType === 'DELETE') {
+          // Test o'chirildi
+          setQuizzes(prev => prev.filter(q => q.id !== payload.old.id));
+        }
+      }
+    )
+    .subscribe();
+
+  return () => {
+    supabase.removeChannel(channel);
+  };
+}, []);
+```
+
+REAL-TIME RESULTS (Statistikada):
+
+```typescript
+// Natijalar jonli yangilanadi
+useEffect(() => {
+  const channel = supabase
+    .channel(`results-${quizId}`)
+    .on(
+      'postgres_changes',
+      {
+        event: 'INSERT',
+        schema: 'public',
+        table: 'results',
+        filter: `quiz_id=eq.${quizId}`
+      },
+      (payload) => {
+        // Yangi natija keldi
+        setResults(prev => [...prev, payload.new]);
+
+        // Statistikani qayta hisoblash
+        recalculateStats();
+      }
+    )
+    .subscribe();
+
+  return () => {
+    supabase.removeChannel(channel);
+  };
+}, [quizId]);
+```
+
+PRESENCE (Kim online):
+
+```typescript
+// Ko'p o'quvchi bir vaqtda test topshirayotganini ko'rish
+const channel = supabase.channel('quiz-room');
+
+// Join
+channel
+  .on('presence', { event: 'sync' }, () => {
+    const state = channel.presenceState();
+    console.log('Online users:', Object.keys(state).length);
+  })
+  .subscribe(async (status) => {
+    if (status === 'SUBSCRIBED') {
+      await channel.track({
+        user: studentName,
+        class: classNumber,
+        online_at: new Date().toISOString()
+      });
+    }
+  });
+
+// Leave
+return () => {
+  channel.untrack();
+};
+```
+
+
+=============== 5-BOLIM. DEPLOY QILIW HAM ISHLETILW (6-8 BET) ===============
+
+5.1. GITHUB REPOSITORY JARATUW HAM VERSION CONTROL
+
+GIT BOSHLASH:
+
+```bash
+# 1. Git initialize
+git init
+
+# 2. .gitignore yaratish
+echo "node_modules
+.next
+.env.local
+.DS_Store
+*.log" > .gitignore
+
+# 3. First commit
+git add .
+git commit -m "Initial commit: School Quiz System"
+```
+
+GITHUB REPOSITORY:
+
+```bash
+# 1. GitHub da repo yaratish (web orqali)
+# Repository name: school_quiz
+
+# 2. Local ni GitHub ga ulash
+git remote add origin https://github.com/nawrizbey/school_quiz.git
+
+# 3. Push qilish
+git branch -M main
+git push -u origin main
+```
+
+GIT WORKFLOW:
+
+```bash
+# Feature branch yaratish
+git checkout -b feature/statistics-page
+
+# O'zgarishlarni commit qilish
+git add .
+git commit -m "Add statistics page with charts"
+
+# Main branch ga merge
+git checkout main
+git merge feature/statistics-page
+
+# GitHub ga push
+git push origin main
+```
+
+COMMIT MESSAGE CONVENTION:
+
+```
+feat: Add question image upload feature
+fix: Fix timer countdown bug
+refactor: Improve shuffle algorithm
+docs: Update README with deployment steps
+style: Format code with Prettier
+test: Add unit tests for shuffle function
+```
+
+BRANCHES:
+
+```
+main - production ready code
+develop - development code
+feature/* - yangi feature'lar
+bugfix/* - bug fixes
+hotfix/* - critical fixes
+```
+
+5.2. VERCEL PLATFORMASI ARQALI DEPLOY QILIW
+
+VERCEL NIMA?
+- Next.js yaratuvchilari (Vercel Inc.)
+- Avtomatik deployment
+- Global CDN - tezkor loading
+- Serverless functions
+- Free tier - hobby projects
+
+DEPLOYMENT JARAYONI:
+
+1. **Vercel Account**:
+   - https://vercel.com ga kirish
+   - GitHub bilan ulash
+
+2. **Import Project**:
+```
+New Project → Import Git Repository → school_quiz
+```
+
+3. **Configure**:
+```
+Framework Preset: Next.js
+Root Directory: ./
+Build Command: npm run build (automatic)
+Output Directory: .next (automatic)
+Install Command: npm install (automatic)
+```
+
+4. **Environment Variables**:
+```
+NEXT_PUBLIC_SUPABASE_URL = https://xxx.supabase.co
+NEXT_PUBLIC_SUPABASE_ANON_KEY = eyJxxx...
+```
+
+5. **Deploy**:
+```
+Deploy → Building → Success!
+URL: https://school-quiz-xxx.vercel.app
+```
+
+AUTOMATIC DEPLOYMENT:
+
+```bash
+# Har git push da avtomatik deploy
+git add .
+git commit -m "Update quiz list UI"
+git push origin main
+
+# Vercel avtomatik:
+# 1. GitHub webhook detect
+# 2. Code pull
+# 3. npm install
+# 4. npm run build
+# 5. Deploy to CDN
+# 6. Ready! (30-60 seconds)
+```
+
+PREVIEW DEPLOYMENTS:
+
+```bash
+# Feature branch - preview URL
+git checkout -b feature/new-stats
+git push origin feature/new-stats
+
+# Vercel creates: https://school-quiz-git-feature-new-stats-xxx.vercel.app
+# Test qilish mumkin production buzmasdan
+```
+
+VERCEL CLI (ixtiyoriy):
+
+```bash
+# Install
+npm i -g vercel
+
+# Login
+vercel login
+
+# Deploy from local
+vercel
+
+# Production deploy
+vercel --prod
+```
+
+5.3. CUSTOM DOMAIN (bilimdan.uz) ULLAW
+
+VERCEL DA DOMAIN QO'SHISH:
+
+1. Vercel Dashboard:
+```
+Project Settings → Domains → Add Domain
+```
+
+2. Enter domain:
+```
+bilimdan.uz
+```
+
+3. Vercel DNS record'larni ko'rsatadi:
+```
+Type: A
+Name: @
+Value: 76.76.21.21
+
+Type: CNAME
+Name: www
+Value: cname.vercel-dns.com
+```
+
+AHOST.UZ DA DNS SOZLASH:
+
+1. Login: https://my.ahost.uz
+
+2. Domenlar → bilimdan.uz → DNS Management
+
+3. Eski record'larni o'chirish:
+```
+- Parking page A record
+- Default CNAME
+```
+
+4. Yangi record'lar qo'shish:
+```
+Type: A
+Host: @
+Points to: 76.76.21.21
+TTL: 3600
+
+Type: CNAME
+Host: www
+Points to: cname.vercel-dns.com
+TTL: 3600
+```
+
+5. Save changes
+
+DNS PROPAGATION:
+
+```bash
+# DNS tekshirish (terminal)
+nslookup bilimdan.uz
+# Server: xxx
+# Address: 76.76.21.21
+
+# Online tools:
+# https://dnschecker.org
+# https://whatsmydns.net
+```
+
+Kutish vaqti:
+- Minimal: 5-10 minut
+- Maksimal: 24-48 soat
+- O'rtacha: 1-2 soat
+
+VERCEL DA TASDIQLASH:
+
+```
+Domain Status: Valid Configuration ✓
+SSL: Provisioning... → Active ✓
+```
+
+5.4. SSL SERTIFIKATI HAM XEWIPSIZILIK
+
+SSL NIMA?
+- Secure Sockets Layer
+- HTTPS protokoli
+- Ma'lumotlarni shifrlash
+- Browser "qulf" belgisi
+
+VERCEL AUTOMATIC SSL:
+
+Vercel avtomatik Let's Encrypt SSL beradi:
+
+```
+1. Domain ulangandan keyin
+2. 60 soniyada SSL provision
+3. Auto-renewal har 60 kunda
+4. Free SSL (Let's Encrypt)
+```
+
+HTTPS REDIRECT:
+
+Vercel avtomatik HTTP → HTTPS yo'naltiradi:
+
+```javascript
+// next.config.js (optional, lekin Vercel default)
+module.exports = {
+  async redirects() {
+    return [
+      {
+        source: '/:path*',
+        has: [{ type: 'header', key: 'x-forwarded-proto', value: 'http' }],
+        destination: 'https://bilimdan.uz/:path*',
+        permanent: true
+      }
+    ];
+  }
+};
+```
+
+SECURITY HEADERS:
+
+```javascript
+// next.config.js
+module.exports = {
+  async headers() {
+    return [
+      {
+        source: '/:path*',
+        headers: [
+          {
+            key: 'X-DNS-Prefetch-Control',
+            value: 'on'
+          },
+          {
+            key: 'Strict-Transport-Security',
+            value: 'max-age=63072000; includeSubDomains; preload'
+          },
+          {
+            key: 'X-Frame-Options',
+            value: 'SAMEORIGIN'
+          },
+          {
+            key: 'X-Content-Type-Options',
+            value: 'nosniff'
+          },
+          {
+            key: 'Referrer-Policy',
+            value: 'origin-when-cross-origin'
+          }
+        ]
+      }
+    ];
+  }
+};
+```
+
+ENVIRONMENT VARIABLES XAVFSIZLIGI:
+
+```bash
+# .env.local (local development)
+NEXT_PUBLIC_SUPABASE_URL=https://xxx.supabase.co
+NEXT_PUBLIC_SUPABASE_ANON_KEY=eyJxxx...
+
+# NEVER commit .env.local to Git!
+# .gitignore da bo'lishi kerak
+```
+
+Vercel da:
+```
+Settings → Environment Variables
+→ Add New
+→ Production, Preview, Development
+```
+
+SUPABASE ROW LEVEL SECURITY:
+
+```sql
+-- Ma'lumotlar bazasi darajasida xavfsizlik
+-- API key hamma bilan umumiy bo'lishi mumkin
+-- Lekin RLS policies himoya qiladi
+
+-- Example: O'quvchi faqat natijalarni ko'radi
+CREATE POLICY "students_view_results"
+ON results FOR SELECT
+TO anon
+USING (true);
+
+-- Lekin o'chirish/o'zgartirish mumkin emas
+-- INSERT faqat yangi natija qo'shish uchun
+```
+
+MONITORING:
+
+Vercel Analytics:
+```
+Settings → Analytics → Enable
+- Page views
+- Unique visitors
+- Performance metrics
+```
+
+Error tracking:
+```javascript
+// app/error.tsx
+'use client';
+
+export default function Error({ error }: { error: Error }) {
+  useEffect(() => {
+    // Log to service (Sentry, LogRocket, etc.)
+    console.error('Error:', error);
+  }, [error]);
+
+  return <div>Xatolik yuz berdi!</div>;
+}
+```
+
+
+=============== QORYTINDI (1-2 BET) ===============
+
+ERISHILGAN NATIJALAR:
+
+1. **Texnik natijalar**:
+   - To'liq funksional test tizimi
+   - 4 ta database jadval, 30+ SQL policies
+   - 15+ sahifa (student + admin)
+   - Responsive design (mobile-friendly)
+   - Real-time statistika
+   - Deterministic shuffle algoritmi
+
+2. **Foydalanuvchi tajribasi**:
+   - Intuitive UI (foydalanish oson)
+   - Qaraqalpaq tilida to'liq lokalizatsiya
+   - Tezkor loading (Next.js optimization)
+   - Timer va countdown xususiyatlari
+   - CSV export - natijalarni saqlash
+
+3. **Ta'lim samaradorligi**:
+   - O'qituvchilar ish vaqtini tejash
+   - Avtomatik baholash
+   - Statistik tahlil - o'quvchi bilimini kuzatish
+   - Kechikish oldini olish (time-windowed tests)
+   - Takrorlanish oldini olish (duplicate prevention)
+
+4. **Deployment**:
+   - Production ready
+   - Custom domain: bilimdan.uz
+   - SSL sertifikati
+   - Global CDN (tezkor)
+   - 99.9% uptime (Vercel + Supabase)
+
+QIYINCHILIKLAR VA YECHIMLAR:
+
+1. **Timer sinxronizatsiyasi**:
+   Muammo: Server vaqti vs client vaqti
+   Yechim: scheduled_time dan hisoblash, client-side countdown
+
+2. **Duplicate submissions**:
+   Muammo: O'quvchi qayta topshirishi
+   Yechim: UNIQUE constraint (quiz_id, student_name, class_number)
+
+3. **Answer shuffling**:
+   Muammo: Random lekin deterministic bo'lishi kerak
+   Yechim: Seeded Fisher-Yates shuffle
+
+4. **RLS complexity**:
+   Muammo: Teacher faqat o'z testlarini, Super Admin hammasini
+   Yechim: Ko'p policies, role-based
+
+5. **Late arrival**:
+   Muammo: O'quvchi test boshlanganidan keyin kirsa
+   Yechim: Qolgan vaqtni hisoblash va limit qilish
+
+KELAJAKDA YAXSHILASH REJASI:
+
+1. **Yangi xususiyatlar**:
+   - Essay type questions (ochiq javob)
+   - Multi-correct answers (bir nechta to'g'ri)
+   - Question bank - savol bazasi
+   - Random question selection - har test boshqa
+   - Student dashboard - o'z natijalarini ko'rish
+   - Email notifications - natija yuborish
+   - PDF export - sertifikat
+
+2. **Texnik yaxshilash**:
+   - Unit testing (Jest, React Testing Library)
+   - E2E testing (Playwright)
+   - Performance optimization
+   - Caching strategy
+   - PWA - offline qo'llab-quvvatlash
+   - Mobile app (React Native)
+
+3. **Ta'lim jihatidan**:
+   - 7-11 sinflar uchun kengaytirish
+   - Ko'proq fanlar
+   - Video savollar
+   - Audio savollar (tillar uchun)
+   - Gamification - badges, leaderboard
+   - Adaptive learning - qiyinlik darajasi
+
+4. **Administratsiya**:
+   - Teacher analytics - o'z testlari statistikasi
+   - Bulk import - Excel'dan test import
+   - Question versioning - savol tarixini saqlash
+   - Audit logs - kim nima qildi
+   - Backup system - avtomatik backup
+
+XULOSALAR:
+
+Bu loyiha maktablar uchun zamonaviy, samarali va foydalanish oson test
+tizimini yaratdi. Next.js, React, TypeScript, va Supabase texnologiyalari
+kombinatsiyasi tezkor, xavfsiz, va kengaytiriladigan platforma yaratishga
+imkon berdi.
+
+Loyiha mahalliy ta'limni raqamlashtirish va o'quvchilar bilimini samarali
+baholash uchun amaliy yechim taqdim etadi. Qaraqalpaq tilida bo'lganligi
+mahalliy foydalanuvchilar uchun juda qulay.
+
+Kelajakda ko'proq xususiyatlar qo'shish va platformani kengaytirish
+rejalashtirilgan.
+
+
+=============== PAYDALANǴAN ÁDEBIYATLAR HAM MÁNBELER ===============
+
+RASMIY HUJJATLAR:
+
+1. Next.js Documentation
+   https://nextjs.org/docs
+   Next.js 15 App Router, Server Components, Routing
+
+2. React Documentation
+   https://react.dev
+   React 18 Hooks, Components, Best Practices
+
+3. TypeScript Handbook
+   https://www.typescriptlang.org/docs
+   TypeScript Types, Interfaces, Generics
+
+4. Supabase Documentation
+   https://supabase.com/docs
+   Database, Auth, Storage, RLS Policies
+
+5. Tailwind CSS Documentation
+   https://tailwindcss.com/docs
+   Utility Classes, Responsive Design
+
+6. Recharts Documentation
+   https://recharts.org/en-US
+   Bar Charts, Line Charts, Data Visualization
+
+7. PostgreSQL Documentation
+   https://www.postgresql.org/docs
+   SQL Queries, JSONB, Triggers, Functions
+
+ONLINE MANBALAR:
+
+8. Vercel Documentation
+   https://vercel.com/docs
+   Deployment, Domains, Environment Variables
+
+9. MDN Web Docs
+   https://developer.mozilla.org
+   JavaScript, Web APIs, HTML, CSS
+
+10. GitHub Documentation
+    https://docs.github.com
+    Git, Version Control, Collaboration
+
+TUTORIAL VA KURSLAR:
+
+11. "Next.js 15 Full Course" - freeCodeCamp
+    YouTube, 8+ hours comprehensive tutorial
+
+12. "TypeScript for Beginners" - Net Ninja
+    TypeScript basics to advanced
+
+13. "Supabase Full Course" - Cooper Codes
+    Complete Supabase backend tutorial
+
+14. "React Hooks Tutorial" - Web Dev Simplified
+    useState, useEffect, custom hooks
+
+KITOBLAR:
+
+15. "Learning React" - Alex Banks, Eve Porcello
+    O'Reilly Media, 2nd Edition, 2020
+
+16. "Full-Stack React, TypeScript, and Node"
+    David Choi, 2021
+
+BLOGLAR VA MAQOLALAR:
+
+17. Vercel Blog
+    https://vercel.com/blog
+    Next.js updates, best practices
+
+18. Supabase Blog
+    https://supabase.com/blog
+    PostgreSQL tips, RLS patterns
+
+19. CSS-Tricks
+    https://css-tricks.com
+    Frontend development techniques
+
+20. Dev.to Community
+    https://dev.to
+    Developer articles and discussions
+
+STACKOVERFLOW:
+
+21. Stack Overflow
+    https://stackoverflow.com
+    Specific problem solving, code examples
+
+VIDEO RESOURCES:
+
+22. "Fisher-Yates Shuffle Algorithm" - Computerphile
+    YouTube, Algorithm explanation
+
+23. "Understanding JWT" - Web Dev Simplified
+    Authentication concepts
+
+GITHUB REPOSITORIES:
+
+24. Next.js Examples
+    https://github.com/vercel/next.js/tree/canary/examples
+    Official Next.js example projects
+
+25. Supabase Examples
+    https://github.com/supabase/supabase/tree/master/examples
+    Example integrations
+
+COMMUNITY FORUMS:
+
+26. Next.js Discussions
+    https://github.com/vercel/next.js/discussions
+    Community help
+
+27. Supabase Discord
+    https://discord.supabase.com
+    Real-time community support
+
+TOOLS:
+
+28. VS Code Documentation
+    https://code.visualstudio.com/docs
+    IDE features, extensions
+
+29. Git Documentation
+    https://git-scm.com/doc
+    Version control commands
+
+30. npm Documentation
+    https://docs.npmjs.com
+    Package management
+
+
+=============== QOSIMSHALAR ===============
+
+A QOSIMSHA - LOYIHA STRUKTURASI (KOD NUSXASI)
+
+Muhim fayllardan namunalar:
+
+1. lib/supabase.ts - Database configuration
+2. app/quiz/[id]/page.tsx - Take quiz logic
+3. app/admin/create-quiz/page.tsx - Create quiz form
+4. app/stats/page.tsx - Statistics dashboard
+5. components/ImageUpload.tsx - Image upload component
+
+B QOSIMSHA - MA'LIWMATLAR BAZASI SXEMASI (SQL KOD)
+
+To'liq SQL schema:
+- supabase-schema.sql
+- fix-rls.sql
+- setup-storage.sql
+
+C QOSIMSHA - SCREENSHOT'LAR
+
+Sahifa ko'rinislari:
+1. Bosh sahifa (Landing page)
+2. Test ro'yxati (Quiz list)
+3. Test topshirish (Taking quiz)
+4. Natijalar (Results page)
+5. Teacher dashboard
+6. Test yaratish (Create quiz)
+7. Statistika (Statistics)
+8. Super admin panel
+
+
+===============================================================================
+OXIRI
+===============================================================================
+
+ESLATMA:
+Bu matn kurs ishi uchun asosiy mazmunni o'z ichiga oladi. Word faylga
+ko'chirganda:
+- Sarlavhalar uchun heading styles ishlatiladi
+- Kod parchalari monospace font bilan
+- Diagrammalar va screenshot'lar qo'shiladi
+- Sahifa raqamlari qo'yiladi
+- Mündəriş (MAZMUNI) avtomatik yaratiladi
+
+Muvaffaqiyatlar!

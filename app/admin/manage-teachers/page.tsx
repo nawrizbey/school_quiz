@@ -132,7 +132,7 @@ export default function ManageTeachers() {
 
           <div className="bg-yellow-50 border-l-4 border-yellow-400 p-4 mb-6">
             <p className="text-sm text-yellow-800">
-              <strong>⚠️ Áhmiyet:</strong> Login hám paroldi ózgertkenińizden keyin, mugalimler jańa ma'lıwmatlar menen kiriw kerek boladı.
+              <strong>⚠️ Eskertiw:</strong> Login hám paroldi ózgertkenińizden keyin, muǵállimler jańa maǵlıwmatlar menen kiriw kerek.
             </p>
           </div>
 
