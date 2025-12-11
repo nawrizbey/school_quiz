@@ -193,7 +193,7 @@ export const translations = {
     averageScore: 'Ortasha ball',
     averageTime: 'Ortasha waqıt',
     scoreDistribution: 'Ball bólistiriliwi',
-    lastTestTimes: 'Sońǵı 10 ta test waqtı (minut)',
+    lastTestTimes: 'Sońǵı 10 test waqtı (minut)',
     recentResults: 'Sońǵı nátiyeler',
     name: 'Atı',
     class: 'Klas',
