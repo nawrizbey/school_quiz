@@ -411,7 +411,7 @@ export default function TakeQuiz({ params }: { params: Promise<{ id: string }> }
 
   // Name input screen
   if (showNameInput) {
-    const isWindowClosed = quiz && isTestWindowClosed(quiz);
+    const isWindowClosed = quiz && isEntryWindowClosed(quiz);
 
     // Get subject label
     const getSubjectLabel = (subject: string) => {
