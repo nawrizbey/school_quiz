@@ -19,6 +19,7 @@ export default function CreateQuiz() {
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [timeLimit, setTimeLimit] = useState(10); // minutes
+  const [entryWindow, setEntryWindow] = useState(3); // minutes - Kirish oynasi
   const [subject, setSubject] = useState<Subject | ''>('');
   const [scheduledDay, setScheduledDay] = useState(1);
   const [scheduledTime, setScheduledTime] = useState('21:00');
@@ -171,6 +172,7 @@ export default function CreateQuiz() {
           description,
           subject,
           time_limit: timeLimit * 60, // convert to seconds
+          entry_window: entryWindow * 60, // convert to seconds - Kirish oynasi
           scheduled_day: scheduledDay,
           scheduled_time: scheduledTime + ':00',
           author_name: authorName,
@@ -290,7 +292,7 @@ export default function CreateQuiz() {
                 )}
               </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
                     {translations.createQuiz.timeLimitLabel}
@@ -304,6 +306,23 @@ export default function CreateQuiz() {
                     max="120"
                     required
                   />
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Kirish oynasi (daqiqa)
+                  </label>
+                  <input
+                    type="number"
+                    value={entryWindow}
+                    onChange={(e) => setEntryWindow(Number(e.target.value))}
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent text-gray-800"
+                    min="1"
+                    max="30"
+                    required
+                    title="O'quvchilar testga kirib olishlari uchun berilgan vaqt"
+                  />
+                  <p className="text-xs text-gray-500 mt-1">Test boshlanganidan necha daqiqagacha kirish mumkin</p>
                 </div>
 
                 <div>

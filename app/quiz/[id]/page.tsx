@@ -52,10 +52,12 @@ export default function TakeQuiz({ params }: { params: Promise<{ id: string }> }
   const [timeUntilStart, setTimeUntilStart] = useState<number>(0);
   const [testHasStarted, setTestHasStarted] = useState(false);
   const [waitingForStart, setWaitingForStart] = useState(false);
+  const [studentStartedAt, setStudentStartedAt] = useState<string | null>(null);
   const router = useRouter();
 
-  // Helper function - test oynasi yopilganligini tekshirish
-  const isTestWindowClosed = (quiz: Quiz | null) => {
+  // Helper function - kirish oynasi yopilganligini tekshirish
+  // Entry window - testga kirib olish uchun vaqt (masalan, 3 daqiqa)
+  const isEntryWindowClosed = (quiz: Quiz | null) => {
     if (!quiz) return false;
 
     const now = new Date();
@@ -64,10 +66,28 @@ export default function TakeQuiz({ params }: { params: Promise<{ id: string }> }
     const startTime = new Date(now);
     startTime.setHours(hours, minutes, 0, 0);
 
-    const endTime = new Date(startTime);
-    endTime.setSeconds(endTime.getSeconds() + quiz.time_limit);
+    const entryEndTime = new Date(startTime);
+    entryEndTime.setSeconds(entryEndTime.getSeconds() + (quiz.entry_window || 180));
 
-    return now > endTime;
+    return now > entryEndTime;
+  };
+
+  // Helper function - butun test tugaganligini tekshirish
+  // Bu test boshlanganidan + entry_window + time_limit vaqt o'tganini tekshiradi
+  const isTestFullyFinished = (quiz: Quiz | null) => {
+    if (!quiz) return false;
+
+    const now = new Date();
+    const [hours, minutes] = quiz.scheduled_time.split(':').map(Number);
+
+    const startTime = new Date(now);
+    startTime.setHours(hours, minutes, 0, 0);
+
+    // Test to'liq tugash vaqti = boshlanish + kirish oynasi + test vaqti
+    const fullEndTime = new Date(startTime);
+    fullEndTime.setSeconds(fullEndTime.getSeconds() + (quiz.entry_window || 180) + quiz.time_limit);
+
+    return now > fullEndTime;
   };
 
   useEffect(() => {
@@ -126,8 +146,8 @@ export default function TakeQuiz({ params }: { params: Promise<{ id: string }> }
 
       if (quizError) throw quizError;
 
-      // Test oynasi yopilganligini darhol tekshirish
-      if (isTestWindowClosed(quizData)) {
+      // Test butunlay tugaganligini tekshirish
+      if (isTestFullyFinished(quizData)) {
         alert(translations.quizTaking.testWindowClosed);
         router.push('/quiz');
         return;
@@ -190,9 +210,10 @@ export default function TakeQuiz({ params }: { params: Promise<{ id: string }> }
       return;
     }
 
-    // Check if test window has closed
-    if (quiz && isTestWindowClosed(quiz)) {
-      alert(translations.quizTaking.testWindowClosed);
+    // Check if entry window has closed (kirish oynasi yopilgan)
+    if (quiz && isEntryWindowClosed(quiz)) {
+      const entryMinutes = Math.floor((quiz.entry_window || 180) / 60);
+      alert(`Keshirasiz, kirish vaqti tugadi! Testga faqat boshlanganidan ${entryMinutes} daqiqa ichida kirish mumkin edi.`);
       router.push('/quiz');
       return;
     }
@@ -231,9 +252,10 @@ export default function TakeQuiz({ params }: { params: Promise<{ id: string }> }
   };
 
   const startTest = () => {
-    // Check if test window has closed
-    if (quiz && isTestWindowClosed(quiz)) {
-      alert(translations.quizTaking.testWindowClosed);
+    // Check if entry window has closed
+    if (quiz && isEntryWindowClosed(quiz)) {
+      const entryMinutes = Math.floor((quiz.entry_window || 180) / 60);
+      alert(`Keshirasiz, kirish vaqti tugadi! Testga faqat boshlanganidan ${entryMinutes} daqiqa ichida kirish mumkin edi.`);
       router.push('/quiz');
       setLoading(false);
       return;
@@ -256,20 +278,14 @@ export default function TakeQuiz({ params }: { params: Promise<{ id: string }> }
 
     setQuestions(shuffledQuestions);
 
-    // Calculate remaining time based on elapsed time
-    if (scheduledStartTime && quiz) {
-      const now = new Date();
-      const elapsedSeconds = Math.floor((now.getTime() - scheduledStartTime.getTime()) / 1000);
-      const remainingTime = Math.max(0, quiz.time_limit - elapsedSeconds);
-
-      if (remainingTime === 0) {
-        alert(translations.quizTaking.testWindowClosed);
-        router.push('/quiz');
-        return;
-      }
-
-      setTimeLeft(remainingTime);
+    // HAR BIR O'QUVCHI TO'LIQ VAQT OLADI
+    // Kirish oynasi ichida kirgan barcha o'quvchilar time_limit vaqtni oladi
+    if (quiz) {
+      setTimeLeft(quiz.time_limit);
     }
+
+    // O'quvchi testni boshlagan vaqtni yozib olish
+    setStudentStartedAt(new Date().toISOString());
 
     setShowNameInput(false);
     setWaitingForStart(false);
@@ -308,7 +324,7 @@ export default function TakeQuiz({ params }: { params: Promise<{ id: string }> }
 
       const timeTaken = quiz!.time_limit - timeLeft;
 
-      // Save result
+      // Save result with started_at timestamp
       const { data: resultData, error } = await supabase.from('results').insert({
         quiz_id: resolvedParams.id,
         student_name: studentName,
@@ -317,6 +333,7 @@ export default function TakeQuiz({ params }: { params: Promise<{ id: string }> }
         total_questions: questions.length,
         time_taken: timeTaken,
         answers: answers,
+        started_at: studentStartedAt,
       }).select().single();
 
       if (error) throw error;

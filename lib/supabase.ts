@@ -28,6 +28,7 @@ export interface Quiz {
   description: string;
   subject: Subject;
   time_limit: number; // in seconds
+  entry_window: number; // in seconds (default 180 = 3 minutes) - Kirish oynasi
   scheduled_day: number; // 1-5 (dushanba-juma)
   scheduled_time: string; // '21:00:00'
   author_name: string;
@@ -56,6 +57,7 @@ export interface Result {
   total_questions: number;
   time_taken: number; // in seconds
   answers?: number[];
+  started_at?: string; // O'quvchi testni qachon boshlagani
   created_at: string;
 }
 
